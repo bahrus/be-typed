@@ -10,6 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
+  "dependencies": {
+    "be-decorated": "0.0.114",
+    "be-hive": "0.0.46"
+  },
   "author": "",
   "license": "MIT",
   "bugs": {
