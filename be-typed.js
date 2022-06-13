@@ -21,7 +21,7 @@ export class BeTyped {
             self['be-typed-dialog'] = dialog;
             dialog.id = 'be-typed-dialog';
             dialog.innerHTML = String.raw `
-<form>
+<form method="dialog">
     <label>Type:
         <select>
             <option value="text">Text</option>
@@ -41,6 +41,8 @@ export class BeTyped {
             <option value="radio">Radio</option>
         </select>
     </label>
+    <button value="cancel">Cancel</button>
+    <button value="default">Apply</button>
 </form>
             `;
             document.body.appendChild(dialog);
