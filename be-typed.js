@@ -45,9 +45,13 @@ export class BeTyped {
     <button value="default">Apply</button>
 </form>
             `;
+            dialog.querySelector('[value="default"]').addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
         dialog.showModal();
+    };
+    applyDialog = (e) => {
+        console.log(e);
     };
 }
 const tagName = 'be-typed';

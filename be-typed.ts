@@ -49,9 +49,14 @@ export class BeTyped implements BeTypedActions{
     <button value="default">Apply</button>
 </form>
             `;
+            dialog.querySelector('[value="default"]')!.addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
         dialog.showModal();
+    }
+
+    applyDialog = (e: Event) => {
+        console.log(e);
     }
 }
 
