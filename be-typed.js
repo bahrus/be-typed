@@ -1,7 +1,9 @@
 import { register } from 'be-hive/register.js';
 import { define } from 'be-decorated/be-decorated.js';
 export class BeTyped {
+    #beDecorProps;
     intro(proxy, target, beDecorProps) {
+        this.#beDecorProps = beDecorProps;
         const btn = document.createElement('button');
         btn.innerText = '⚙️';
         btn.addEventListener('click', this.loadDialog);
@@ -44,14 +46,27 @@ export class BeTyped {
     <label style="display:block;">Name:
         <input type="text" name="name" />
     </label>
+    <button value="delete">✂️</button>
+    <button value="clone">➕</button>
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
 </form>
             `;
             dialog.querySelector('[value="default"]').addEventListener('click', this.applyDialog);
+            dialog.querySelector('[value="delete"]').addEventListener('click', this.delete);
+            dialog.querySelector('[value="clone"]').addEventListener('click', this.clone);
             document.body.appendChild(dialog);
         }
         dialog.showModal();
+    };
+    delete = (e) => {
+        this.proxy.remove();
+    };
+    clone = (e) => {
+        const cln = this.proxy.cloneNode(true);
+        const attr = cln.getAttribute('is-' + this.#beDecorProps.ifWantsToBe);
+        cln.setAttribute('be-' + this.#beDecorProps.ifWantsToBe, attr);
+        this.proxy.after(cln);
     };
     applyDialog = (e) => {
         const dialog = e.target.closest('dialog');
