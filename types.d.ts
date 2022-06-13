@@ -10,4 +10,5 @@ export interface BeTypedProps extends BeTypedVirtualProps{
 
 export interface BeTypedActions{
     intro(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps): void;
 }
