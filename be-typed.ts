@@ -63,16 +63,18 @@ export class BeTyped implements BeTypedActions{
         let inp = this.proxy.querySelector('input');
         if(inp === null) {
             inp = document.createElement('input');
-            this.proxy.appendChild(inp);
+            const btn = this.proxy.querySelector('button')!;
+            btn.before(inp);
         }
         inp.type = dialog.querySelector('select')!.value;
         const name = (dialog.querySelector('input[name="name"]') as HTMLInputElement).value;
         if(name !== '') {
+            inp.name = name;
             const nodes = Array.from(this.proxy.childNodes).filter(x => x.nodeType === 3);
             for(const node of nodes){
                 node.remove();
             }
-            this.proxy.prepend(document.createTextNode(name));
+            this.proxy.prepend(document.createTextNode(name + ': '));
         }
 
     }
