@@ -51,7 +51,13 @@ export class BeTyped {
         dialog.showModal();
     };
     applyDialog = (e) => {
-        console.log(e);
+        const dialog = e.target.closest('dialog');
+        let inp = this.proxy.querySelector('input');
+        if (inp === null) {
+            inp = document.createElement('input');
+            this.proxy.appendChild(inp);
+        }
+        inp.type = dialog.querySelector('select').value;
     };
 }
 const tagName = 'be-typed';
