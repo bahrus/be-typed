@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node node_modules/may-it-serve/serve.js",
+    "package-check": "package-check"
   },
   "repository": {
     "type": "git",
@@ -13,6 +15,10 @@
   "dependencies": {
     "be-decorated": "0.0.114",
     "be-hive": "0.0.46"
+  },
+  "devDependencies": {
+    "may-it-serve": "0.0.0",
+    "@skypack/package-check": "0.2.2"
   },
   "author": "",
   "license": "MIT",
