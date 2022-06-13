@@ -26,7 +26,7 @@ export class BeTyped implements BeTypedActions{
             dialog.id = 'be-typed-dialog';
             dialog.innerHTML = String.raw `
 <form method="dialog">
-    <label>Type:
+    <label style="display:block;">Type:
         <select>
             <option value="text">Text</option>
             <option value="number">Number</option>
@@ -44,6 +44,9 @@ export class BeTyped implements BeTypedActions{
             <option value="checkbox">Checkbox</option>
             <option value="radio">Radio</option>
         </select>
+    </label>
+    <label style="display:block;">Name:
+        <input type="text" name="name" />
     </label>
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
@@ -63,6 +66,15 @@ export class BeTyped implements BeTypedActions{
             this.proxy.appendChild(inp);
         }
         inp.type = dialog.querySelector('select')!.value;
+        const name = (dialog.querySelector('input[name="name"]') as HTMLInputElement).value;
+        if(name !== '') {
+            const nodes = Array.from(this.proxy.childNodes).filter(x => x.nodeType === 3);
+            for(const node of nodes){
+                node.remove();
+            }
+            this.proxy.prepend(document.createTextNode(name));
+        }
+
     }
 }
 
