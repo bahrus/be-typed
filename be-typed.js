@@ -6,7 +6,7 @@ export class BeTyped {
     intro(proxy, target, beDecorProps) {
         this.#beDecorProps = beDecorProps;
     }
-    onInsertPosition({ text, insertPosition }) {
+    async onInsertPosition({ text, insertPosition, then }) {
         if (this.#trigger === undefined) {
             switch (insertPosition) {
                 case 'afterbegin':
@@ -43,6 +43,10 @@ export class BeTyped {
             }
             this.onText(this);
             this.#trigger.addEventListener('click', this.loadDialog);
+        }
+        if (then !== undefined) {
+            const { doThen } = await import('be-decorated/doThen.js');
+            doThen(this.proxy, then);
         }
     }
     onText({ text }) {
@@ -125,7 +129,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['insertPosition', 'text'],
+            virtualProps: ['insertPosition', 'text', 'then'],
             proxyPropDefaults: {
                 insertPosition: 'beforeend',
                 text: '&#x2699;'

@@ -9,7 +9,7 @@ export class BeTyped implements BeTypedActions{
         this.#beDecorProps = beDecorProps;
     }
 
-    onInsertPosition({text, insertPosition}: this): void{
+    async onInsertPosition({text, insertPosition, then}: this): void{
         if(this.#trigger === undefined){
             switch(insertPosition){
                 case 'afterbegin':
@@ -48,6 +48,10 @@ export class BeTyped implements BeTypedActions{
             this.onText(this);
             this.#trigger.addEventListener('click', this.loadDialog);
             
+        }
+        if(then !== undefined){
+            const {doThen} = await import('be-decorated/doThen.js');
+            doThen(this.proxy, then);
         }
         
     }
@@ -143,7 +147,7 @@ define<BeTypedProps & BeDecoratedProps<BeTypedProps, BeTypedActions>, BeTypedAct
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['insertPosition', 'text'],
+            virtualProps: ['insertPosition', 'text', 'then'],
             proxyPropDefaults:{
                 insertPosition:'beforeend',
                 text: '&#x2699;'

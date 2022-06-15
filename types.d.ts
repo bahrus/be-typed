@@ -3,6 +3,7 @@ import {BeDecoratedProps} from 'be-decorated/types';
 export interface BeTypedVirtualProps {
     insertPosition: InsertPosition;
     text: string;
+    then: string | any[] | any;
 }
 
 export interface BeTypedProps extends BeTypedVirtualProps{

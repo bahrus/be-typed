@@ -13,7 +13,7 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.114",
+    "be-decorated": "0.0.117",
     "be-hive": "0.0.46"
   },
   "devDependencies": {
