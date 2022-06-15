@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <label be-typed></label>
+    <label be-typed be-delible be-clonable></label>
     <script type=importmap>
         {
             "imports": {
@@ -20,6 +20,8 @@
     </script>
     <script type=module>
         import '../be-typed.js';
+        import '/node_modules/be-delible/be-delible.js';
+        import '/node_modules/be-clonable/be-clonable.js';
     </script>
 </body>
 </html>

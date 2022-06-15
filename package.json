@@ -18,7 +18,9 @@
   },
   "devDependencies": {
     "may-it-serve": "0.0.0",
-    "@skypack/package-check": "0.2.2"
+    "@skypack/package-check": "0.2.2",
+    "be-clonable": "0.0.1",
+    "be-delible": "0.0.1"
   },
   "author": "",
   "license": "MIT",
