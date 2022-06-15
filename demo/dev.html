@@ -8,8 +8,12 @@
 </head>
 <body>
     <label be-typed='{
-        "then": "beDelible"
-    }' be-clonable>[Specify Name]</label>
+        "then": {
+            "beClonable": {
+                "then": "beDelible"
+            }
+        }
+    }'>[Specify Name]</label>
     <script type=importmap>
         {
             "imports": {
