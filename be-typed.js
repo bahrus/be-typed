@@ -2,12 +2,53 @@ import { register } from 'be-hive/register.js';
 import { define } from 'be-decorated/be-decorated.js';
 export class BeTyped {
     #beDecorProps;
+    #trigger;
     intro(proxy, target, beDecorProps) {
         this.#beDecorProps = beDecorProps;
-        const btn = document.createElement('button');
-        btn.innerText = '⚙️';
-        btn.addEventListener('click', this.loadDialog);
-        target.appendChild(btn);
+    }
+    onInsertPosition({ text, insertPosition }) {
+        if (this.#trigger === undefined) {
+            switch (insertPosition) {
+                case 'afterbegin':
+                case 'beforeend':
+                    {
+                        const trigger = this.proxy.querySelector('button.be-typed-trigger');
+                        if (trigger !== null) {
+                            this.#trigger = trigger;
+                        }
+                    }
+                    break;
+                case 'beforebegin':
+                    {
+                        const trigger = this.proxy.previousElementSibling;
+                        if (trigger !== null && trigger.matches('button.be-typed-trigger')) {
+                            this.#trigger = trigger;
+                        }
+                    }
+                    break;
+                case 'afterend':
+                    {
+                        const trigger = this.proxy.nextElementSibling;
+                        if (trigger !== null && trigger.matches('button.be-typed-trigger')) {
+                            this.#trigger = trigger;
+                        }
+                    }
+                    break;
+            }
+            if (this.#trigger === undefined) {
+                this.#trigger = document.createElement('button');
+                this.#trigger.title = 'Click to configure text box.';
+                this.#trigger.classList.add('be-typed-trigger');
+                this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
+            }
+            this.onText(this);
+            this.#trigger.addEventListener('click', this.loadDialog);
+        }
+    }
+    onText({ text }) {
+        if (this.#trigger !== undefined) {
+            this.#trigger.innerHTML = text; //TODO:  sanitize
+        }
     }
     finale(proxy, target, beDecorProps) {
         const btn = target.querySelector('button');
@@ -84,9 +125,17 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: [],
+            virtualProps: ['insertPosition', 'text'],
+            proxyPropDefaults: {
+                insertPosition: 'beforeend',
+                text: '&#x2699;'
+            },
             intro: 'intro',
             finale: 'finale'
+        },
+        actions: {
+            onInsertPosition: 'insertPosition',
+            onText: 'text',
         }
     },
     complexPropDefaults: {

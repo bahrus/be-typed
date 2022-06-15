@@ -4,12 +4,58 @@ import {BeTypedActions, BeTypedVirtualProps, BeTypedProps} from './types';
 
 export class BeTyped implements BeTypedActions{
     #beDecorProps!: BeDecoratedProps;
+    #trigger: HTMLButtonElement | undefined;
     intro(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps){
         this.#beDecorProps = beDecorProps;
-        const btn = document.createElement('button');
-        btn.innerText = '⚙️';
-        btn.addEventListener('click', this.loadDialog);
-        target.appendChild(btn);
+    }
+
+    onInsertPosition({text, insertPosition}: this): void{
+        if(this.#trigger === undefined){
+            switch(insertPosition){
+                case 'afterbegin':
+                case 'beforeend':
+                    {
+                        const trigger = this.proxy.querySelector('button.be-typed-trigger');
+                        if(trigger !== null){
+                            this.#trigger = trigger as HTMLButtonElement;
+                        }
+                    }
+                    break;
+                case 'beforebegin':
+                    {
+                        const trigger = this.proxy.previousElementSibling;
+                        if(trigger !== null && trigger.matches('button.be-typed-trigger')){
+                            this.#trigger = trigger as HTMLButtonElement;
+                        }
+                    }
+                    break;
+                case 'afterend':
+                    {
+                        const trigger = this.proxy.nextElementSibling;
+                        if(trigger !== null && trigger.matches('button.be-typed-trigger')){
+                            this.#trigger = trigger as HTMLButtonElement;
+                        }
+                    }
+                    break;
+
+            }
+            if(this.#trigger === undefined){
+                this.#trigger = document.createElement('button');
+                this.#trigger.title = 'Click to configure text box.'
+                this.#trigger.classList.add('be-typed-trigger');
+                this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
+            }
+            this.onText(this);
+            this.#trigger.addEventListener('click', this.loadDialog);
+            
+        }
+        
+    }
+
+    onText({text}: this): void{
+        if(this.#trigger !== undefined){
+            this.#trigger.innerHTML = text;//TODO:  sanitize
+        }
     }
 
     finale(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps){
@@ -97,9 +143,17 @@ define<BeTypedProps & BeDecoratedProps<BeTypedProps, BeTypedActions>, BeTypedAct
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: [],
+            virtualProps: ['insertPosition', 'text'],
+            proxyPropDefaults:{
+                insertPosition:'beforeend',
+                text: '&#x2699;'
+            },
             intro: 'intro',
             finale: 'finale'
+        },
+        actions:{
+            onInsertPosition: 'insertPosition',
+            onText: 'text',
         }
     },
     complexPropDefaults:{
