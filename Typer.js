@@ -98,3 +98,7 @@ export class Typer {
         }
     }
 }
+export const proxyPropDefaults = {
+    insertPosition: 'beforeend',
+    text: '&#x2699;'
+};

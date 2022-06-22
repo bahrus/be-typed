@@ -1,6 +1,6 @@
 import { register } from 'be-hive/register.js';
 import { define } from 'be-decorated/be-decorated.js';
-import { Typer } from './Typer.js';
+import { Typer, proxyPropDefaults } from './Typer.js';
 export class BeTyped {
     //#beDecorProps!: BeDecoratedProps;
     //#trigger: HTMLButtonElement | undefined;
@@ -39,10 +39,7 @@ define({
             upgrade,
             ifWantsToBe,
             virtualProps: ['insertPosition', 'text', 'then'],
-            proxyPropDefaults: {
-                insertPosition: 'beforeend',
-                text: '&#x2699;'
-            },
+            proxyPropDefaults,
             intro: 'intro',
             batonPass: 'batonPass',
             finale: 'finale'

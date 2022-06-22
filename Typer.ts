@@ -12,12 +12,12 @@ export class Typer{
 
     async addTypeButtonTrigger({insertPosition, text, then}: BeTypedVirtualProps){
         if(this.#trigger === undefined){
-            const trigger = findAdjacentElement(insertPosition, this.proxy, 'button.be-typed-trigger');
+            const trigger = findAdjacentElement(insertPosition!, this.proxy, 'button.be-typed-trigger');
             if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
             if(this.#trigger === undefined){
                 this.#trigger = document.createElement('button');
                 this.#trigger.classList.add('button.be-typed-trigger');
-                this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
+                this.proxy.insertAdjacentElement(insertPosition!, this.#trigger);
             }
             this.setText(this.props);
             this.#trigger.addEventListener('click', this.loadDialog);
@@ -30,7 +30,7 @@ export class Typer{
     
     setText({text}: BeTypedVirtualProps): void{
         if(this.#trigger !== undefined){
-            this.#trigger.innerHTML = text;//TODO:  sanitize
+            this.#trigger.innerHTML = text!;//TODO:  sanitize
         }
     }
 
@@ -103,3 +103,8 @@ export class Typer{
         }
     }
 }
+
+export const proxyPropDefaults: BeTypedVirtualProps = {
+    insertPosition:'beforeend',
+    text: '&#x2699;'
+};
