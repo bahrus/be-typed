@@ -1,0 +1,1 @@
+import './be-typed.js';

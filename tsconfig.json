@@ -9,7 +9,7 @@
 		"watch": true
 	},
 	"files": [
-		"be-typed.ts"
+		"index.ts"
 	],
 	"exclude":[
 		"build",

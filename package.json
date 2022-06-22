@@ -15,14 +15,15 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.117",
+    "be-decorated": "0.0.125",
+    "trans-render": "0.0.538",
     "be-hive": "0.0.46"
   },
   "devDependencies": {
     "may-it-serve": "0.0.0",
     "@skypack/package-check": "0.2.2",
-    "be-clonable": "0.0.3",
-    "be-delible": "0.0.3"
+    "be-clonable": "0.0.4",
+    "be-delible": "0.0.5"
   },
   "author": "",
   "license": "MIT",
