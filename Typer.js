@@ -17,6 +17,7 @@ export class Typer {
                 this.#trigger = trigger;
             if (this.#trigger === undefined) {
                 this.#trigger = document.createElement('button');
+                this.#trigger.type = 'button';
                 this.#trigger.classList.add('button.be-typed-trigger');
                 this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
             }
