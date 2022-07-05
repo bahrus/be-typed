@@ -40,6 +40,7 @@ export class Typer{
         if(this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
             this.#dialog = dialog;
+            
             dialog.innerHTML = String.raw `
 <form method="dialog">
     <label style="display:block;">Name:
@@ -72,6 +73,11 @@ export class Typer{
             dialog.querySelector('[value="default"]')!.addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
+        const currentName = this.proxy.querySelector('input')?.name;
+        if(currentName){
+            (this.#dialog.querySelector('input[name="name"]') as HTMLInputElement).value = currentName;
+        }
+        
         this.#dialog.showModal();
     }
 

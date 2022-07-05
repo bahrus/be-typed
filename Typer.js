@@ -71,6 +71,10 @@ export class Typer {
             dialog.querySelector('[value="default"]').addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
+        const currentName = this.proxy.querySelector('input')?.name;
+        if (currentName) {
+            this.#dialog.querySelector('input[name="name"]').value = currentName;
+        }
         this.#dialog.showModal();
     };
     applyDialog = (e) => {
