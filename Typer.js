@@ -3,6 +3,7 @@ export class Typer {
     proxy;
     props;
     #trigger;
+    #dialog;
     constructor(proxy, props) {
         this.proxy = proxy;
         this.props = props;
@@ -35,13 +36,14 @@ export class Typer {
         }
     }
     loadDialog = (e) => {
-        let dialog = self['be-typed-dialog'];
-        if (dialog === undefined) {
-            dialog = document.createElement('dialog');
-            self['be-typed-dialog'] = dialog;
-            dialog.id = 'be-typed-dialog';
+        if (this.#dialog === undefined) {
+            const dialog = document.createElement('dialog');
+            this.#dialog = dialog;
             dialog.innerHTML = String.raw `
 <form method="dialog">
+    <label style="display:block;">Name:
+        <input type="text" name="name" />
+    </label>
     <label style="display:block;">Type:
         <select>
             <option value="text">Text</option>
@@ -61,9 +63,7 @@ export class Typer {
             <option value="radio">Radio</option>
         </select>
     </label>
-    <label style="display:block;">Name:
-        <input type="text" name="name" />
-    </label>
+
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
 </form>
@@ -71,7 +71,7 @@ export class Typer {
             dialog.querySelector('[value="default"]').addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
-        dialog.showModal();
+        this.#dialog.showModal();
     };
     applyDialog = (e) => {
         const dialog = e.target.closest('dialog');

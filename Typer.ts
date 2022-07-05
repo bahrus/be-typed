@@ -3,6 +3,7 @@ import {findAdjacentElement} from 'be-decorated/findAdjacentElement.js';
 
 export class Typer{
     #trigger: HTMLButtonElement | undefined;
+    #dialog: HTMLDialogElement | undefined;
 
     constructor(public proxy: HTMLLabelElement, public props: BeTypedVirtualProps){
         if(props === undefined){
@@ -36,13 +37,14 @@ export class Typer{
     }
 
     loadDialog = (e: Event) => {
-        let dialog = (<any>self)['be-typed-dialog'];
-        if(dialog === undefined) {
-            dialog = document.createElement('dialog');
-            (<any>self)['be-typed-dialog'] = dialog;
-            dialog.id = 'be-typed-dialog';
+        if(this.#dialog === undefined) {
+            const dialog = document.createElement('dialog');
+            this.#dialog = dialog;
             dialog.innerHTML = String.raw `
 <form method="dialog">
+    <label style="display:block;">Name:
+        <input type="text" name="name" />
+    </label>
     <label style="display:block;">Type:
         <select>
             <option value="text">Text</option>
@@ -62,9 +64,7 @@ export class Typer{
             <option value="radio">Radio</option>
         </select>
     </label>
-    <label style="display:block;">Name:
-        <input type="text" name="name" />
-    </label>
+
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
 </form>
@@ -72,7 +72,7 @@ export class Typer{
             dialog.querySelector('[value="default"]')!.addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
-        dialog.showModal();
+        this.#dialog.showModal();
     }
 
 
