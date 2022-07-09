@@ -111,6 +111,35 @@ export class Typer{
     }
 
 
+    transferAttribute(dialog: HTMLDialogElement, attr: string, inp: HTMLInputElement){
+        const editingEl = dialog.querySelector(`input[name="${attr}"]`) as HTMLInputElement;
+        switch(editingEl.type){
+            case 'number':
+            {
+                const val = editingEl.value;
+                if(val === ''){
+                    inp.removeAttribute(attr);
+                }else{
+                    inp.setAttribute(attr, val);
+                }
+                break;
+            }
+            case 'checkbox':
+            {
+                const val = editingEl.checked;
+                if(val){
+                    inp.setAttribute(attr, '');
+                }else{
+                    inp.removeAttribute(attr);
+                }
+            }
+                
+
+        }
+        
+    }
+
+
     applyDialog = (e: Event) => {
         const dialog = (e.target as HTMLButtonElement).closest('dialog')!;
         let inp = this.proxy.querySelector('input');
@@ -129,7 +158,9 @@ export class Typer{
             }
             this.proxy.prepend(document.createTextNode(name + ': '));
         }
-
+        ['required', 'max', 'min', 'maxLength', 'multiple'].forEach(attr => {
+            this.transferAttribute(dialog, attr, inp);
+        })
     }
 
     dispose(){

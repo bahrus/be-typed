@@ -105,6 +105,32 @@ export class Typer {
         }
         this.#dialog.showModal();
     };
+    transferAttribute(dialog, attr, inp) {
+        const editingEl = dialog.querySelector(`input[name="${attr}"]`);
+        switch (editingEl.type) {
+            case 'number':
+                {
+                    const val = editingEl.value;
+                    if (val === '') {
+                        inp.removeAttribute(attr);
+                    }
+                    else {
+                        inp.setAttribute(attr, val);
+                    }
+                    break;
+                }
+            case 'checkbox':
+                {
+                    const val = editingEl.checked;
+                    if (val) {
+                        inp.setAttribute(attr, '');
+                    }
+                    else {
+                        inp.removeAttribute(attr);
+                    }
+                }
+        }
+    }
     applyDialog = (e) => {
         const dialog = e.target.closest('dialog');
         let inp = this.proxy.querySelector('input');
@@ -123,6 +149,9 @@ export class Typer {
             }
             this.proxy.prepend(document.createTextNode(name + ': '));
         }
+        ['required', 'max', 'min', 'maxLength', 'multiple'].forEach(attr => {
+            this.transferAttribute(dialog, attr, inp);
+        });
     };
     dispose() {
         if (this.#trigger !== undefined) {
