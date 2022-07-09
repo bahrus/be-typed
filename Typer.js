@@ -149,7 +149,7 @@ export class Typer {
             }
             this.proxy.prepend(document.createTextNode(name + ': '));
         }
-        ['required', 'max', 'min', 'maxLength', 'multiple'].forEach(attr => {
+        ['required', 'max', 'min', 'maxlength', 'multiple'].forEach(attr => {
             this.transferAttribute(dialog, attr, inp);
         });
     };
