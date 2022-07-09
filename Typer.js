@@ -18,6 +18,8 @@ export class Typer {
                 this.#trigger = trigger;
             if (this.#trigger === undefined) {
                 this.#trigger = document.createElement('button');
+                this.#trigger.ariaLabel = 'Configure input.';
+                this.#trigger.title = 'Configure input.';
                 this.#trigger.type = 'button';
                 this.#trigger.classList.add('be-typed-trigger');
                 this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
@@ -63,7 +65,31 @@ export class Typer {
             <option value="radio">Radio</option>
         </select>
     </label>
-
+    <label>
+        Required:
+        <input name=required type=checkbox>
+    </label>
+    </label>
+    <label>
+        Multiple:
+        <input name=multiple type=checkbox>
+    </label>
+    <label>
+        MaxLength:
+        <input name=maxlength type=number>
+    </label>
+    <label>
+        MinLength:
+        <input name=minlength type=number>
+    </label>
+    <label>
+        Max:
+        <input name=max type=number>
+    </label>
+    <label>
+        Min:
+        <input name=min type=number>
+    </label>
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
 </form>
