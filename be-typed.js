@@ -38,7 +38,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['insertPosition', 'text', 'then'],
+            virtualProps: ['insertPosition', 'text', 'then', 'beReformable'],
             proxyPropDefaults,
             intro: 'intro',
             batonPass: 'batonPass',

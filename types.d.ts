@@ -4,6 +4,7 @@ export interface BeTypedVirtualProps {
     insertPosition?: InsertPosition;
     text?: string;
     then?: string | any[] | any;
+    beReformable?: boolean;
 }
 
 export interface BeTypedProps extends BeTypedVirtualProps{

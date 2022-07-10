@@ -41,6 +41,26 @@ export class Typer {
         if (this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
             this.#dialog = dialog;
+            let beReformableSettings = '';
+            if (this.props.beReformable) {
+                beReformableSettings = String.raw `
+<fieldset>
+    <legend>beReformable Settings</legend>
+    <label>
+        Path index:
+        <input type=number name=data-path-idx>
+    </label>
+    <label>
+        Path lhs:
+        <input type=text name=da-path-lhs>
+    </label>
+    <label>
+        Path rhs:
+        <input type=text name=da-path-rhs>
+    </label>
+</fieldset>
+                `;
+            }
             dialog.innerHTML = String.raw `
 <form method="dialog">
     <label style="display:block;">Name:
@@ -90,6 +110,7 @@ export class Typer {
         Min:
         <input name=min type=number>
     </label>
+    ${beReformableSettings}
     <button value="cancel">Cancel</button>
     <button value="default">Apply</button>
 </form>
@@ -107,6 +128,8 @@ export class Typer {
     };
     transferAttribute(dialog, attr, inp) {
         const editingEl = dialog.querySelector(`input[name="${attr}"]`);
+        if (editingEl === null)
+            return;
         switch (editingEl.type) {
             case 'number':
                 {
@@ -149,7 +172,7 @@ export class Typer {
             }
             this.proxy.prepend(document.createTextNode(name + ': '));
         }
-        ['required', 'max', 'min', 'maxlength', 'multiple'].forEach(attr => {
+        ['required', 'max', 'min', 'maxlength', 'multiple', 'data-path-idx', 'data-path-lhs', 'data-path-rhs'].forEach(attr => {
             this.transferAttribute(dialog, attr, inp);
         });
     };

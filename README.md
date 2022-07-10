@@ -6,6 +6,8 @@ Allow the user to customize input element during run time.
 <label be-typed></label>
 ```
 
-[ ]: Adds edit button inside label.
-[ ]: Edit button opens dialog that allows user to select type of input (boolean, number, etc).
-[ ]: Dialog also supports selecting name of input element.
+[x]: Adds edit button inside label.
+[x]: Edit button opens dialog that allows user to select type of input (boolean, number, etc).
+[x]: Can also specify validation attributes
+[x]: Some attributes related to be-reformable can also optionally be edited.
+[x]: Dialog also supports selecting name of input element.
