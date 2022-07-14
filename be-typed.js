@@ -11,7 +11,7 @@ export class BeTyped {
     batonPass(proxy, target, beDecorProps, baton) {
         this.#typer = baton;
     }
-    async onInsertPosition(self) {
+    async onTriggerInsertPosition(self) {
         if (this.#typer === undefined) {
             this.#typer = new Typer(self.proxy, self.proxy);
         }
@@ -38,14 +38,14 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['insertPosition', 'text', 'then', 'beReformable'],
+            virtualProps: ['triggerInsertPosition', 'text', 'then', 'beReformable', 'labelTextContainer'],
             proxyPropDefaults,
             intro: 'intro',
             batonPass: 'batonPass',
-            finale: 'finale'
+            finale: 'finale',
         },
         actions: {
-            onInsertPosition: 'insertPosition',
+            onTriggerInsertPosition: 'triggerInsertPosition',
             onText: 'text',
         }
     },

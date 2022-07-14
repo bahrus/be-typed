@@ -11,9 +11,9 @@ export class Typer {
             this.props = proxy;
         }
     }
-    async addTypeButtonTrigger({ insertPosition, text, then }) {
+    async addTypeButtonTrigger({ triggerInsertPosition, text, then }) {
         if (this.#trigger === undefined) {
-            const trigger = findAdjacentElement(insertPosition, this.proxy, 'button.be-typed-trigger');
+            const trigger = findAdjacentElement(triggerInsertPosition, this.proxy, 'button.be-typed-trigger');
             if (trigger !== null)
                 this.#trigger = trigger;
             if (this.#trigger === undefined) {
@@ -22,7 +22,7 @@ export class Typer {
                 this.#trigger.title = 'Configure input.';
                 this.#trigger.type = 'button';
                 this.#trigger.classList.add('be-typed-trigger');
-                this.proxy.insertAdjacentElement(insertPosition, this.#trigger);
+                this.proxy.insertAdjacentElement(triggerInsertPosition, this.#trigger);
             }
             this.setText(this.props);
             this.#trigger.addEventListener('click', this.loadDialog);
@@ -166,11 +166,10 @@ export class Typer {
         const name = dialog.querySelector('input[name="name"]').value;
         if (name !== '') {
             inp.name = name;
-            const nodes = Array.from(this.proxy.childNodes).filter(x => x.nodeType === 3);
-            for (const node of nodes) {
-                node.remove();
-            }
-            this.proxy.prepend(document.createTextNode(name + ': '));
+            const labelTextContainer = this.proxy.querySelector(this.proxy.labelTextContainer);
+            if (labelTextContainer === null)
+                throw '404';
+            labelTextContainer.textContent = name + ': ';
         }
         ['required', 'max', 'min', 'maxlength', 'multiple', 'data-path-idx', 'data-path-lhs', 'data-path-rhs'].forEach(attr => {
             this.transferAttribute(dialog, attr, inp);
@@ -184,6 +183,7 @@ export class Typer {
     }
 }
 export const proxyPropDefaults = {
-    insertPosition: 'beforeend',
+    triggerInsertPosition: 'beforeend',
+    labelTextContainer: 'span',
     text: '&#x2699;'
 };

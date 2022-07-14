@@ -15,7 +15,7 @@ export class BeTyped implements BeTypedActions{
         this.#typer = baton;
     }
 
-    async onInsertPosition(self: this): Promise<void>{
+    async onTriggerInsertPosition(self: this): Promise<void>{
         if(this.#typer === undefined){
             this.#typer = new Typer(self.proxy, self.proxy);
         }
@@ -52,14 +52,15 @@ define<BeTypedProps & BeDecoratedProps<BeTypedProps, BeTypedActions>, BeTypedAct
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['insertPosition', 'text', 'then', 'beReformable'],
+            virtualProps: ['triggerInsertPosition', 'text', 'then', 'beReformable', 'labelTextContainer'],
             proxyPropDefaults,
             intro: 'intro',
             batonPass: 'batonPass',
-            finale: 'finale'
+            finale: 'finale',
+            
         },
         actions:{
-            onInsertPosition: 'insertPosition',
+            onTriggerInsertPosition: 'triggerInsertPosition',
             onText: 'text',
         }
     },

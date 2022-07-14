@@ -5,15 +5,15 @@ export class Typer{
     #trigger: HTMLButtonElement | undefined;
     #dialog: HTMLDialogElement | undefined;
 
-    constructor(public proxy: HTMLLabelElement, public props: BeTypedVirtualProps){
+    constructor(public proxy: HTMLLabelElement & BeTypedVirtualProps, public props: BeTypedVirtualProps){
         if(props === undefined){
             this.props = proxy as any as BeTypedVirtualProps;
         }
     }
 
-    async addTypeButtonTrigger({insertPosition, text, then}: BeTypedVirtualProps){
+    async addTypeButtonTrigger({triggerInsertPosition, text, then}: BeTypedVirtualProps){
         if(this.#trigger === undefined){
-            const trigger = findAdjacentElement(insertPosition!, this.proxy, 'button.be-typed-trigger');
+            const trigger = findAdjacentElement(triggerInsertPosition!, this.proxy, 'button.be-typed-trigger');
             if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
             if(this.#trigger === undefined){
                 this.#trigger = document.createElement('button');
@@ -21,7 +21,7 @@ export class Typer{
                 this.#trigger.title = 'Configure input.';
                 this.#trigger.type = 'button';
                 this.#trigger.classList.add('be-typed-trigger');
-                this.proxy.insertAdjacentElement(insertPosition!, this.#trigger);
+                this.proxy.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
             }
             this.setText(this.props);
             this.#trigger.addEventListener('click', this.loadDialog);
@@ -173,11 +173,9 @@ export class Typer{
         const name = (dialog.querySelector('input[name="name"]') as HTMLInputElement).value;
         if(name !== '') {
             inp.name = name;
-            const nodes = Array.from(this.proxy.childNodes).filter(x => x.nodeType === 3);
-            for(const node of nodes){
-                node.remove();
-            }
-            this.proxy.prepend(document.createTextNode(name + ': '));
+            const labelTextContainer = this.proxy.querySelector(this.proxy.labelTextContainer!);
+            if(labelTextContainer === null) throw '404';
+            labelTextContainer.textContent = name + ': '; 
         }
         ['required', 'max', 'min', 'maxlength', 'multiple', 'data-path-idx', 'data-path-lhs', 'data-path-rhs'].forEach(attr => {
             this.transferAttribute(dialog, attr, inp!);
@@ -193,6 +191,7 @@ export class Typer{
 }
 
 export const proxyPropDefaults: BeTypedVirtualProps = {
-    insertPosition:'beforeend',
+    triggerInsertPosition:'beforeend',
+    labelTextContainer:'span',
     text: '&#x2699;'
 };
