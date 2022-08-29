@@ -3,13 +3,10 @@ import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {BeTypedActions, BeTypedVirtualProps, BeTypedProps} from './types';
 import {Typer, proxyPropDefaults} from './Typer.js';
 
-export class BeTyped implements BeTypedActions{
+export class BeTyped extends EventTarget implements BeTypedActions{
     //#beDecorProps!: BeDecoratedProps;
     //#trigger: HTMLButtonElement | undefined;
     #typer!: Typer;
-    intro(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps){
-        //this.#beDecorProps = beDecorProps;
-    }
 
     batonPass(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps<any, any>, baton: any): void {
         this.#typer = baton;
@@ -22,11 +19,12 @@ export class BeTyped implements BeTypedActions{
         this.#typer.addTypeButtonTrigger(self);
     }
 
-    onText(self: this): void {
+    async onText({proxy}: this) {
         if(this.#typer === undefined){
-            this.#typer = new Typer(self.proxy, self.proxy);
+            this.#typer = new Typer(proxy, proxy);
         }
-        this.#typer.addTypeButtonTrigger(self);
+        await this.#typer.addTypeButtonTrigger(this);
+        proxy.resolved = true
     }
 
     finale(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps){
@@ -52,9 +50,8 @@ define<BeTypedProps & BeDecoratedProps<BeTypedProps, BeTypedActions>, BeTypedAct
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['triggerInsertPosition', 'text', 'then', 'beReformable', 'labelTextContainer'],
+            virtualProps: ['triggerInsertPosition', 'text', 'beReformable', 'labelTextContainer'],
             proxyPropDefaults,
-            intro: 'intro',
             batonPass: 'batonPass',
             finale: 'finale',
             

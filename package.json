@@ -32,15 +32,16 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.125",
-    "trans-render": "0.0.538",
-    "be-hive": "0.0.46"
+    "be-decorated": "0.0.147",
+    "trans-render": "0.0.578",
+    "be-hive": "0.0.57"
   },
   "devDependencies": {
-    "may-it-serve": "0.0.0",
+    "may-it-serve": "0.0.2",
     "@skypack/package-check": "0.2.2",
-    "be-clonable": "0.0.4",
-    "be-delible": "0.0.5"
+    "be-clonable": "0.0.8",
+    "be-delible": "0.0.7",
+    "be-promising": "0.0.2"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",

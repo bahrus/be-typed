@@ -8,7 +8,7 @@ export const trPlugin: TransformPluginSettings = {
     selector: 'beTypedAttribs',
     ready: true,
     processor:  async ({target, val, attrib, host}: RenderContext) => {
-        let defaults = proxyPropDefaults;
+        let defaults = {...proxyPropDefaults};
         if(val){
             const params = JSON.parse(val) as BeTypedVirtualProps;
             Object.assign(defaults, params);

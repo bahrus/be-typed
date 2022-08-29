@@ -5,7 +5,7 @@ export const trPlugin = {
     selector: 'beTypedAttribs',
     ready: true,
     processor: async ({ target, val, attrib, host }) => {
-        let defaults = proxyPropDefaults;
+        let defaults = { ...proxyPropDefaults };
         if (val) {
             const params = JSON.parse(val);
             Object.assign(defaults, params);

@@ -11,7 +11,7 @@ export class Typer{
         }
     }
 
-    async addTypeButtonTrigger({triggerInsertPosition, text, then}: BeTypedVirtualProps){
+    async addTypeButtonTrigger({triggerInsertPosition, text}: BeTypedVirtualProps){
         if(this.#trigger === undefined){
             const trigger = findAdjacentElement(triggerInsertPosition!, this.proxy, 'button.be-typed-trigger');
             if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
@@ -25,10 +25,6 @@ export class Typer{
             }
             this.setText(this.props);
             this.#trigger.addEventListener('click', this.loadDialog);
-            if(then !== undefined){
-                const {doThen} = await import('be-decorated/doThen.js');
-                doThen(this.proxy, then);
-            }
         }
     }
     

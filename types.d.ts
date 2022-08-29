@@ -1,11 +1,13 @@
-import {BeDecoratedProps} from 'be-decorated/types';
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
-export interface BeTypedVirtualProps {
+export interface BeTypedEndUserProps {
     triggerInsertPosition?: InsertPosition;
     labelTextContainer?: string;
     text?: string;
-    then?: string | any[] | any;
     beReformable?: boolean;
+}
+
+export interface BeTypedVirtualProps extends BeTypedEndUserProps, MinimalProxy{
 }
 
 export interface BeTypedProps extends BeTypedVirtualProps{
@@ -13,7 +15,6 @@ export interface BeTypedProps extends BeTypedVirtualProps{
 }
 
 export interface BeTypedActions{
-    intro(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps): void;
     batonPass(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps, baton: any): void;
     finale(proxy: HTMLLabelElement & BeTypedVirtualProps, target: HTMLLabelElement, beDecorProps: BeDecoratedProps): void;
     onTriggerInsertPosition(self: this): void;

@@ -11,7 +11,7 @@ export class Typer {
             this.props = proxy;
         }
     }
-    async addTypeButtonTrigger({ triggerInsertPosition, text, then }) {
+    async addTypeButtonTrigger({ triggerInsertPosition, text }) {
         if (this.#trigger === undefined) {
             const trigger = findAdjacentElement(triggerInsertPosition, this.proxy, 'button.be-typed-trigger');
             if (trigger !== null)
@@ -26,10 +26,6 @@ export class Typer {
             }
             this.setText(this.props);
             this.#trigger.addEventListener('click', this.loadDialog);
-            if (then !== undefined) {
-                const { doThen } = await import('be-decorated/doThen.js');
-                doThen(this.proxy, then);
-            }
         }
     }
     setText({ text }) {

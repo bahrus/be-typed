@@ -1,13 +1,10 @@
 import { register } from 'be-hive/register.js';
 import { define } from 'be-decorated/be-decorated.js';
 import { Typer, proxyPropDefaults } from './Typer.js';
-export class BeTyped {
+export class BeTyped extends EventTarget {
     //#beDecorProps!: BeDecoratedProps;
     //#trigger: HTMLButtonElement | undefined;
     #typer;
-    intro(proxy, target, beDecorProps) {
-        //this.#beDecorProps = beDecorProps;
-    }
     batonPass(proxy, target, beDecorProps, baton) {
         this.#typer = baton;
     }
@@ -17,11 +14,12 @@ export class BeTyped {
         }
         this.#typer.addTypeButtonTrigger(self);
     }
-    onText(self) {
+    async onText({ proxy }) {
         if (this.#typer === undefined) {
-            this.#typer = new Typer(self.proxy, self.proxy);
+            this.#typer = new Typer(proxy, proxy);
         }
-        this.#typer.addTypeButtonTrigger(self);
+        await this.#typer.addTypeButtonTrigger(this);
+        proxy.resolved = true;
     }
     finale(proxy, target, beDecorProps) {
         if (this.#typer !== undefined) {
@@ -38,9 +36,8 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['triggerInsertPosition', 'text', 'then', 'beReformable', 'labelTextContainer'],
+            virtualProps: ['triggerInsertPosition', 'text', 'beReformable', 'labelTextContainer'],
             proxyPropDefaults,
-            intro: 'intro',
             batonPass: 'batonPass',
             finale: 'finale',
         },
