@@ -2,8 +2,6 @@ import { register } from 'be-hive/register.js';
 import { define } from 'be-decorated/be-decorated.js';
 import { Typer, proxyPropDefaults } from './Typer.js';
 export class BeTyped extends EventTarget {
-    //#beDecorProps!: BeDecoratedProps;
-    //#trigger: HTMLButtonElement | undefined;
     #typer;
     batonPass(proxy, target, beDecorProps, baton) {
         this.#typer = baton;
@@ -14,11 +12,12 @@ export class BeTyped extends EventTarget {
         }
         this.#typer.addTypeButtonTrigger(self);
     }
-    async onText({ proxy }) {
+    async onText(pp) {
+        const { proxy } = pp;
         if (this.#typer === undefined) {
             this.#typer = new Typer(proxy, proxy);
         }
-        await this.#typer.addTypeButtonTrigger(this);
+        await this.#typer.addTypeButtonTrigger(pp);
         proxy.resolved = true;
     }
     finale(proxy, target, beDecorProps) {

@@ -1,19 +1,20 @@
 import { findAdjacentElement } from 'be-decorated/findAdjacentElement.js';
 export class Typer {
-    proxy;
+    self;
     props;
     #trigger;
     #dialog;
-    constructor(proxy, props) {
-        this.proxy = proxy;
+    constructor(self, props) {
+        this.self = self;
         this.props = props;
         if (props === undefined) {
-            this.props = proxy;
+            this.props = self;
         }
     }
+    #abortController;
     async addTypeButtonTrigger({ triggerInsertPosition, text }) {
         if (this.#trigger === undefined) {
-            const trigger = findAdjacentElement(triggerInsertPosition, this.proxy, 'button.be-typed-trigger');
+            const trigger = findAdjacentElement(triggerInsertPosition, this.self, 'button.be-typed-trigger');
             if (trigger !== null)
                 this.#trigger = trigger;
             if (this.#trigger === undefined) {
@@ -22,10 +23,14 @@ export class Typer {
                 this.#trigger.title = 'Configure input.';
                 this.#trigger.type = 'button';
                 this.#trigger.classList.add('be-typed-trigger');
-                this.proxy.insertAdjacentElement(triggerInsertPosition, this.#trigger);
+                this.self.insertAdjacentElement(triggerInsertPosition, this.#trigger);
             }
             this.setText(this.props);
-            this.#trigger.addEventListener('click', this.loadDialog);
+            if (this.#abortController === undefined)
+                this.#abortController = new AbortController();
+            this.#trigger.addEventListener('click', e => {
+                this.loadDialog();
+            }, { signal: this.#abortController.signal });
         }
     }
     setText({ text }) {
@@ -33,7 +38,7 @@ export class Typer {
             this.#trigger.innerHTML = text; //TODO:  sanitize
         }
     }
-    loadDialog = (e) => {
+    loadDialog() {
         if (this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
             this.#dialog = dialog;
@@ -114,14 +119,14 @@ export class Typer {
             dialog.querySelector('[value="default"]').addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
-        const input = this.proxy.querySelector('input');
+        const input = this.self.querySelector('input');
         if (input !== null) {
             this.#dialog.querySelector('input[name="name"]').value = input.name;
             const currentType = input.type;
             this.#dialog.querySelector(`option[value="${currentType}"]`).selected = true;
         }
         this.#dialog.showModal();
-    };
+    }
     transferAttribute(dialog, attr, inp) {
         const editingEl = dialog.querySelector(`input[name="${attr}"]`);
         if (editingEl === null)
@@ -152,17 +157,17 @@ export class Typer {
     }
     applyDialog = (e) => {
         const dialog = e.target.closest('dialog');
-        let inp = this.proxy.querySelector('input');
+        let inp = this.self.querySelector('input');
         if (inp === null) {
             inp = document.createElement('input');
-            const btn = this.proxy.querySelector('button');
+            const btn = this.self.querySelector('button');
             btn.before(inp);
         }
         inp.type = dialog.querySelector('select').value;
         const name = dialog.querySelector('input[name="name"]').value;
         if (name !== '') {
             inp.name = name;
-            const labelTextContainer = this.proxy.querySelector(this.proxy.labelTextContainer);
+            const labelTextContainer = this.self.querySelector(this.self.labelTextContainer);
             if (labelTextContainer === null)
                 throw '404';
             labelTextContainer.textContent = name + ': ';
@@ -172,8 +177,9 @@ export class Typer {
         });
     };
     dispose() {
+        if (this.#abortController !== undefined)
+            this.#abortController.abort();
         if (this.#trigger !== undefined) {
-            this.#trigger.removeEventListener('click', this.loadDialog);
             this.#trigger.remove();
         }
     }

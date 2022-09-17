@@ -10,9 +10,9 @@ export const trPlugin = {
             const params = JSON.parse(val);
             Object.assign(defaults, params);
         }
-        const cloner = new Typer(target, defaults);
-        cloner.addTypeButtonTrigger(defaults);
-        passTheBaton('typed', target, cloner);
+        const typer = new Typer(target, defaults);
+        typer.addTypeButtonTrigger(defaults);
+        passTheBaton('typed', target, typer);
     }
 };
 register(trPlugin);

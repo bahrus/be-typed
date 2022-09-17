@@ -1,19 +1,20 @@
-import {BeTypedProps, BeTypedVirtualProps} from './types';
+import {VirtualProps, EndUserProps} from './types';
 import {findAdjacentElement} from 'be-decorated/findAdjacentElement.js';
 
 export class Typer{
     #trigger: HTMLButtonElement | undefined;
     #dialog: HTMLDialogElement | undefined;
 
-    constructor(public proxy: HTMLLabelElement & BeTypedVirtualProps, public props: BeTypedVirtualProps){
+    constructor(public self: HTMLLabelElement, public props: EndUserProps){
         if(props === undefined){
-            this.props = proxy as any as BeTypedVirtualProps;
+            this.props = self as any as VirtualProps;
         }
     }
 
-    async addTypeButtonTrigger({triggerInsertPosition, text}: BeTypedVirtualProps){
+    #abortController: AbortController | undefined;
+    async addTypeButtonTrigger({triggerInsertPosition, text}: VirtualProps){
         if(this.#trigger === undefined){
-            const trigger = findAdjacentElement(triggerInsertPosition!, this.proxy, 'button.be-typed-trigger');
+            const trigger = findAdjacentElement(triggerInsertPosition!, this.self, 'button.be-typed-trigger');
             if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
             if(this.#trigger === undefined){
                 this.#trigger = document.createElement('button');
@@ -21,20 +22,23 @@ export class Typer{
                 this.#trigger.title = 'Configure input.';
                 this.#trigger.type = 'button';
                 this.#trigger.classList.add('be-typed-trigger');
-                this.proxy.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
+                this.self.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
             }
             this.setText(this.props);
-            this.#trigger.addEventListener('click', this.loadDialog);
+            if(this.#abortController === undefined) this.#abortController = new AbortController();
+            this.#trigger.addEventListener('click', e => {
+                this.loadDialog();
+            }, {signal: this.#abortController.signal});
         }
     }
     
-    setText({text}: BeTypedVirtualProps): void{
+    setText({text}: EndUserProps): void{
         if(this.#trigger !== undefined){
             this.#trigger.innerHTML = text!;//TODO:  sanitize
         }
     }
 
-    loadDialog = (e: Event) => {
+    loadDialog(){
         if(this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
             this.#dialog = dialog;
@@ -115,7 +119,7 @@ export class Typer{
             dialog.querySelector('[value="default"]')!.addEventListener('click', this.applyDialog);
             document.body.appendChild(dialog);
         }
-        const input = this.proxy.querySelector('input');
+        const input = this.self.querySelector('input');
         
         if(input !== null){
             (this.#dialog.querySelector('input[name="name"]') as HTMLInputElement).value = input.name;
@@ -159,17 +163,17 @@ export class Typer{
 
     applyDialog = (e: Event) => {
         const dialog = (e.target as HTMLButtonElement).closest('dialog')!;
-        let inp = this.proxy.querySelector('input');
+        let inp = this.self.querySelector('input');
         if(inp === null) {
             inp = document.createElement('input');
-            const btn = this.proxy.querySelector('button')!;
+            const btn = this.self.querySelector('button')!;
             btn.before(inp);
         }
         inp.type = dialog.querySelector('select')!.value;
         const name = (dialog.querySelector('input[name="name"]') as HTMLInputElement).value;
         if(name !== '') {
             inp.name = name;
-            const labelTextContainer = this.proxy.querySelector(this.proxy.labelTextContainer!);
+            const labelTextContainer = this.self.querySelector(this.self.labelTextContainer!);
             if(labelTextContainer === null) throw '404';
             labelTextContainer.textContent = name + ': '; 
         }
@@ -179,14 +183,14 @@ export class Typer{
     }
 
     dispose(){
+        if(this.#abortController !== undefined) this.#abortController.abort();
         if(this.#trigger !== undefined){
-            this.#trigger.removeEventListener('click', this.loadDialog);
             this.#trigger.remove();
         }
     }
 }
 
-export const proxyPropDefaults: BeTypedVirtualProps = {
+export const proxyPropDefaults: EndUserProps = {
     triggerInsertPosition:'beforeend',
     labelTextContainer:'span',
     text: '&#x2699;'
