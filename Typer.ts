@@ -38,6 +38,7 @@ export class Typer{
         }
     }
 
+    #dialogAC: AbortController = new AbortController();
     loadDialog(){
         if(this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
@@ -116,7 +117,9 @@ export class Typer{
     <button value="default">Apply</button>
 </form>
             `;
-            dialog.querySelector('[value="default"]')!.addEventListener('click', this.applyDialog);
+            dialog.querySelector('[value="default"]')!.addEventListener('click', e => {
+
+            }, {signal: this.#dialogAC.signal});
             document.body.appendChild(dialog);
         }
         const input = this.self.querySelector('input');
@@ -161,7 +164,7 @@ export class Typer{
     }
 
 
-    applyDialog = (e: Event) => {
+    applyDialog(e: Event){
         const dialog = (e.target as HTMLButtonElement).closest('dialog')!;
         let inp = this.self.querySelector('input');
         if(inp === null) {
@@ -173,7 +176,7 @@ export class Typer{
         const name = (dialog.querySelector('input[name="name"]') as HTMLInputElement).value;
         if(name !== '') {
             inp.name = name;
-            const labelTextContainer = this.self.querySelector(this.self.labelTextContainer!);
+            const labelTextContainer = this.self.querySelector(this.props.labelTextContainer!);
             if(labelTextContainer === null) throw '404';
             labelTextContainer.textContent = name + ': '; 
         }

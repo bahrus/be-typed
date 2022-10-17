@@ -1,5 +1,5 @@
 import { register } from 'be-hive/register.js';
-import { define } from 'be-decorated/be-decorated.js';
+import { define } from 'be-decorated/DE.js';
 import { Typer, proxyPropDefaults } from './Typer.js';
 export class BeTyped extends EventTarget {
     #typer;
