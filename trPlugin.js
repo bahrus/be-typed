@@ -1,18 +1,13 @@
 import { register } from 'trans-render/lib/pluginMgr.js';
-import { proxyPropDefaults, Typer } from './Typer.js';
-import { passTheBaton } from 'be-decorated/relay.js';
 export const trPlugin = {
     selector: 'beTypedAttribs',
     ready: true,
     processor: async ({ target, val, attrib, host }) => {
-        let defaults = { ...proxyPropDefaults };
-        if (val) {
-            const params = JSON.parse(val);
-            Object.assign(defaults, params);
-        }
-        const typer = new Typer(target, defaults);
-        typer.addTypeButtonTrigger(defaults);
-        passTheBaton('typed', target, typer);
+        if (customElements.get('be-typed') === undefined)
+            return;
+        const { attach } = await import('be-decorated/upgrade.js');
+        const instance = document.createElement('be-typed');
+        attach(target, 'typed', instance.attach.bind(instance));
     }
 };
 register(trPlugin);
