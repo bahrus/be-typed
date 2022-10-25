@@ -31,8 +31,8 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.182",
-    "trans-render": "0.0.628",
+    "be-decorated": "0.0.187",
+    "trans-render": "0.0.629",
     "be-hive": "0.0.76"
   },
   "devDependencies": {

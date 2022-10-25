@@ -1,40 +1,55 @@
 import {register} from 'be-hive/register.js';
 import {define, BeDecoratedProps} from 'be-decorated/DE.js';
-import {Actions, VirtualProps, Proxy, PP} from './types';
-import {Typer, proxyPropDefaults} from './Typer.js';
+import {Actions, PP, PPE, VirtualProps, Proxy, ProxyProps, ITyper} from './types';
 
 export class BeTyped extends EventTarget implements Actions{
-    #typer!: Typer;
+    #trigger: HTMLButtonElement | undefined;
 
-    batonPass(proxy: Proxy, target: HTMLLabelElement, beDecorProps: BeDecoratedProps<any, any>, baton: any): void {
-        this.#typer = baton;
+    async addTypingBtn(pp: PP){
+        if(this.#trigger === undefined){
+            //the check above is unlikely to ever fail.
+            const {triggerInsertPosition, self} = pp;
+            const {findAdjacentElement} = await import('be-decorated/findAdjacentElement.js');
+            const trigger = findAdjacentElement(triggerInsertPosition!, self, 'button.be-typed-trigger');
+            if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
+            let byob = true;
+            if(this.#trigger === undefined){
+                byob = false;
+                this.#trigger = document.createElement('button');
+                this.#trigger.type = 'button';
+                this.#trigger.classList.add('be-typed-trigger');
+                this.#trigger.ariaLabel = 'Configure input.';
+                this.#trigger.title = 'Configure input.';
+                self.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
+            }
+            return [{resolved: true, byob}, {beTyped: {on: 'click', of: this.#trigger}}] as PPE
+        }else{
+            //can't think of a scenario where consumer would want to change the trigger position midstream, so not bothering to do anything here
+        }
     }
 
-    async onTriggerInsertPosition(self: PP){
+    setBtnContent({buttonContent}: PP): void{
+        if(this.#trigger !== undefined){
+            this.#trigger.innerHTML = buttonContent!;//TODO:  sanitize
+        }
+    }
+
+    #typer: ITyper | undefined;
+    async beTyped(pp: PP) {
         if(this.#typer === undefined){
-            this.#typer = new Typer(self.proxy, self.proxy);
+            const {self} = pp;
+            const {Typer} = await import('./Typer.js');
+            this.#typer = new Typer(self, pp);
+            
         }
-        this.#typer.addTypeButtonTrigger(self);
+        this.#typer.showDialog();
+        
     }
 
-    async onText(pp: PP) {
-        const {proxy} = pp
-        if(this.#typer === undefined){
-            this.#typer = new Typer(proxy, proxy);
-        }
-        await this.#typer.addTypeButtonTrigger(pp);
-        proxy.resolved = true
+    finale(){
+        this.#trigger = undefined;
     }
-
-    finale(proxy: Proxy, target: HTMLLabelElement, beDecorProps: BeDecoratedProps){
-        if(this.#typer !== undefined){
-            this.#typer.dispose();
-        }
-    }
-
-
 }
-
 
 const tagName = 'be-typed';
 
@@ -48,15 +63,22 @@ define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['triggerInsertPosition', 'text', 'beReformable', 'labelTextContainer'],
-            proxyPropDefaults,
-            batonPass: 'batonPass',
+            virtualProps: ['triggerInsertPosition', 'buttonContent', 'beReformable', 'labelTextContainer', 'byob'],
+            proxyPropDefaults:{
+                byob: true,
+                triggerInsertPosition: 'beforeend',
+                labelTextContainer:'span',
+                buttonContent: '&#x2699;'
+            },
             finale: 'finale',
             
         },
         actions:{
-            onTriggerInsertPosition: 'triggerInsertPosition',
-            onText: 'text',
+            addTypingBtn: 'triggerInsertPosition',
+            setBtnContent: {
+                ifAllOf: ['buttonContent'],
+                ifNoneOf: ['byob'],
+            }
         }
     },
     complexPropDefaults:{

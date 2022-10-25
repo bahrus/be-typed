@@ -1,7 +1,7 @@
-import {VirtualProps, EndUserProps} from './types';
+import {VirtualProps, EndUserProps, ITyper} from './types';
 import {findAdjacentElement} from 'be-decorated/findAdjacentElement.js';
 
-export class Typer{
+export class Typer implements ITyper{
     #trigger: HTMLButtonElement | undefined;
     #dialog: HTMLDialogElement | undefined;
 
@@ -10,36 +10,10 @@ export class Typer{
             this.props = self as any as VirtualProps;
         }
     }
-
-    #abortController: AbortController | undefined;
-    async addTypeButtonTrigger({triggerInsertPosition, text}: VirtualProps){
-        if(this.#trigger === undefined){
-            const trigger = findAdjacentElement(triggerInsertPosition!, this.self, 'button.be-typed-trigger');
-            if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
-            if(this.#trigger === undefined){
-                this.#trigger = document.createElement('button');
-                this.#trigger.ariaLabel = 'Configure input.';
-                this.#trigger.title = 'Configure input.';
-                this.#trigger.type = 'button';
-                this.#trigger.classList.add('be-typed-trigger');
-                this.self.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
-            }
-            this.setText(this.props);
-            if(this.#abortController === undefined) this.#abortController = new AbortController();
-            this.#trigger.addEventListener('click', e => {
-                this.loadDialog();
-            }, {signal: this.#abortController.signal});
-        }
-    }
     
-    setText({text}: EndUserProps): void{
-        if(this.#trigger !== undefined){
-            this.#trigger.innerHTML = text!;//TODO:  sanitize
-        }
-    }
 
     #dialogAC: AbortController = new AbortController();
-    loadDialog(){
+    showDialog(){
         if(this.#dialog === undefined) {
             const dialog = document.createElement('dialog');
             this.#dialog = dialog;
@@ -118,7 +92,7 @@ export class Typer{
 </form>
             `;
             dialog.querySelector('[value="default"]')!.addEventListener('click', e => {
-
+                this.applyDialog(e);
             }, {signal: this.#dialogAC.signal});
             document.body.appendChild(dialog);
         }
@@ -186,15 +160,9 @@ export class Typer{
     }
 
     dispose(){
-        if(this.#abortController !== undefined) this.#abortController.abort();
-        if(this.#trigger !== undefined){
-            this.#trigger.remove();
-        }
+        if(this.#dialogAC !== undefined) this.#dialogAC.abort();
     }
+
+
 }
 
-export const proxyPropDefaults: EndUserProps = {
-    triggerInsertPosition:'beforeend',
-    labelTextContainer:'span',
-    text: '&#x2699;'
-};

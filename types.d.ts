@@ -1,13 +1,14 @@
-import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
+import {BeDecoratedProps, MinimalProxy, EventConfigs} from 'be-decorated/types';
 
 export interface EndUserProps {
     triggerInsertPosition?: InsertPosition;
     labelTextContainer?: string;
-    text?: string;
+    buttonContent?: string;
     beReformable?: boolean;
 }
 
-export interface VirtualProps extends EndUserProps, MinimalProxy{
+export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLLabelElement>{
+    byob?: boolean;
 }
 
 export type Proxy = HTMLLabelElement & VirtualProps;
@@ -18,9 +19,17 @@ export interface ProxyProps extends VirtualProps{
 
 export type PP = ProxyProps;
 
+export type PPP = Partial<ProxyProps>;
+
+export type PPE = [Partial<PP>, EventConfigs<Proxy, Actions>];
+
 export interface Actions{
-    batonPass(proxy: Proxy, target: HTMLLabelElement, beDecorProps: BeDecoratedProps, baton: any): void;
-    finale(proxy: Proxy, target: HTMLLabelElement, beDecorProps: BeDecoratedProps): void;
-    onTriggerInsertPosition(pp: PP): void;
-    onText(pp: PP): void;
+    addTypingBtn(pp: PP): Promise<PPE | void>;
+    setBtnContent(pp: PP): void;
+    beTyped(pp: PP): void;
+    finale(): void;
+}
+
+export interface ITyper{
+    showDialog(): void;
 }
