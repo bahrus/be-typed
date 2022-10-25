@@ -42,6 +42,9 @@ export class BeTyped extends EventTarget {
     }
     finale() {
         this.#trigger = undefined;
+        if (this.#typer !== undefined) {
+            this.#typer.dispose();
+        }
     }
 }
 const tagName = 'be-typed';

@@ -48,6 +48,9 @@ export class BeTyped extends EventTarget implements Actions{
 
     finale(){
         this.#trigger = undefined;
+        if(this.#typer !== undefined){
+            this.#typer.dispose();
+        }
     }
 }
 

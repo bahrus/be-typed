@@ -32,4 +32,5 @@ export interface Actions{
 
 export interface ITyper{
     showDialog(): void;
+    dispose(): void;
 }

@@ -15,86 +15,92 @@ export class Typer implements ITyper{
     #dialogAC: AbortController = new AbortController();
     showDialog(){
         if(this.#dialog === undefined) {
-            const dialog = document.createElement('dialog');
-            this.#dialog = dialog;
-            let beReformableSettings = '';
-            if(this.props.beReformable){
-                beReformableSettings = String.raw `
-<fieldset>
-    <legend>beReformable Settings</legend>
-    <label>
-        Path index:
-        <input type=number name=data-path-idx>
-    </label>
-    <label>
-        Path lhs:
-        <input type=text name=da-path-lhs>
-    </label>
-    <label>
-        Path rhs:
-        <input type=text name=da-path-rhs>
-    </label>
-</fieldset>
+            if((<any>globalThis)[guid] === undefined){
+                const dialog = document.createElement('dialog');
+                dialog.id = guid;
+                this.#dialog = dialog;
+                let beReformableSettings = '';
+                if(this.props.beReformable){
+                    beReformableSettings = String.raw `
+    <fieldset>
+        <legend>beReformable Settings</legend>
+        <label>
+            Path index:
+            <input type=number name=data-path-idx>
+        </label>
+        <label>
+            Path lhs:
+            <input type=text name=da-path-lhs>
+        </label>
+        <label>
+            Path rhs:
+            <input type=text name=da-path-rhs>
+        </label>
+    </fieldset>
+                    `;
+                }
+                dialog.innerHTML = String.raw `
+    <form method="dialog">
+        <label style="display:block;">Name:
+            <input type="text" name="name" />
+        </label>
+        <label style="display:block;">Type:
+            <select>
+                <option value="text">Text</option>
+                <option value="number">Number</option>
+                <option value="date">Date</option>
+                <option value="time">Time</option>
+                <option value="datetime-local">Datetime-local</option>
+                <option value="email">Email</option>
+                <option value="url">Url</option>
+                <option value="password">Password</option>
+                <option value="search">Search</option>
+                <option value="tel">Tel</option>
+                <option value="color">Color</option>
+                <option value="file">File</option>
+                <option value="range">Range</option>
+                <option value="checkbox">Checkbox</option>
+                <option value="radio">Radio</option>
+            </select>
+        </label>
+        <label>
+            Required:
+            <input name=required type=checkbox>
+        </label>
+        </label>
+        <label>
+            Multiple:
+            <input name=multiple type=checkbox>
+        </label>
+        <label>
+            MaxLength:
+            <input name=maxlength type=number>
+        </label>
+        <label>
+            MinLength:
+            <input name=minlength type=number>
+        </label>
+        <label>
+            Max:
+            <input name=max type=number>
+        </label>
+        <label>
+            Min:
+            <input name=min type=number>
+        </label>
+        ${beReformableSettings}
+        <button value="cancel">Cancel</button>
+        <button value="default">Apply</button>
+    </form>
                 `;
+                dialog.querySelector('[value="default"]')!.addEventListener('click', e => {
+                    this.applyDialog(e);
+                }, {signal: this.#dialogAC.signal});
+                document.body.appendChild(dialog);
+            }else{
+                this.#dialog = (<any>globalThis)[guid] as HTMLDialogElement;
             }
-            dialog.innerHTML = String.raw `
-<form method="dialog">
-    <label style="display:block;">Name:
-        <input type="text" name="name" />
-    </label>
-    <label style="display:block;">Type:
-        <select>
-            <option value="text">Text</option>
-            <option value="number">Number</option>
-            <option value="date">Date</option>
-            <option value="time">Time</option>
-            <option value="datetime-local">Datetime-local</option>
-            <option value="email">Email</option>
-            <option value="url">Url</option>
-            <option value="password">Password</option>
-            <option value="search">Search</option>
-            <option value="tel">Tel</option>
-            <option value="color">Color</option>
-            <option value="file">File</option>
-            <option value="range">Range</option>
-            <option value="checkbox">Checkbox</option>
-            <option value="radio">Radio</option>
-        </select>
-    </label>
-    <label>
-        Required:
-        <input name=required type=checkbox>
-    </label>
-    </label>
-    <label>
-        Multiple:
-        <input name=multiple type=checkbox>
-    </label>
-    <label>
-        MaxLength:
-        <input name=maxlength type=number>
-    </label>
-    <label>
-        MinLength:
-        <input name=minlength type=number>
-    </label>
-    <label>
-        Max:
-        <input name=max type=number>
-    </label>
-    <label>
-        Min:
-        <input name=min type=number>
-    </label>
-    ${beReformableSettings}
-    <button value="cancel">Cancel</button>
-    <button value="default">Apply</button>
-</form>
-            `;
-            dialog.querySelector('[value="default"]')!.addEventListener('click', e => {
-                this.applyDialog(e);
-            }, {signal: this.#dialogAC.signal});
-            document.body.appendChild(dialog);
+
         }
         const input = this.self.querySelector('input');
         
@@ -165,4 +171,6 @@ export class Typer implements ITyper{
 
 
 }
+
+const guid = 'Frx+fxv4fEOZg2XfHY0DRw';
 
