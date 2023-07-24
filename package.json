@@ -9,13 +9,11 @@
     "input-type"
   ],
   "description": "Allow the user to customize input element during run time.",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "be-typed.js",
+  "module": "be-typed.js",
   "exports": {
-    ".": "./index.js",
-    "./be-typed.js": "./be-typed.js",
-    "./trPlugin.js": "./trPlugin.js",
-    "./index.js": "./index.js"
+    ".": "./be-typed.js",
+    "./be-typed.js": "./be-typed.js"
   },
   "files": [
     "*.*"
@@ -24,23 +22,24 @@
   "scripts": {
     "test": "playwright test",
     "serve": "node node_modules/may-it-serve/serve.js",
-    "package-check": "package-check"
+    "safari": "npx playwright wk http://localhost:3030",
+    "update": "ncu -u && npm install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.187",
-    "trans-render": "0.0.629",
-    "be-hive": "0.0.76"
+    "be-enhanced": "0.0.36",
+    "be-hive": "0.0.115",
+    "trans-render": "0.0.699",
+    "xtal-element": "0.0.574"
   },
   "devDependencies": {
-    "may-it-serve": "0.0.3",
-    "@skypack/package-check": "0.2.2",
-    "@playwright/test": "1.27.1",
-    "be-clonable": "0.0.15",
-    "be-delible": "0.0.11",
+    "may-it-serve": "0.0.5",
+    "@playwright/test": "1.36.1",
+    "be-clonable": "0.0.19",
+    "be-delible": "0.0.14",
     "be-promising": "0.0.5"
   },
   "author": "anderson.bruce.b@gmail.com",
