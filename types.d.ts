@@ -1,33 +1,33 @@
-import {BeDecoratedProps, MinimalProxy, EventConfigs} from 'be-decorated/types';
+import { ActionOnEventConfigs } from "trans-render/froop/types";
+import {IBE} from 'be-enhanced/types';
 
-export interface EndUserProps {
+export interface EndUserProps extends IBE<HTMLLabelElement> {
     triggerInsertPosition?: InsertPosition;
     labelTextContainer?: string;
     buttonContent?: string;
     beReformable?: boolean;
+    nudge?: boolean;
 }
 
-export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLLabelElement>{
+export interface AllProps extends EndUserProps{
     byob?: boolean;
 }
 
-export type Proxy = HTMLLabelElement & VirtualProps;
+export type AP = AllProps;
 
-export interface ProxyProps extends VirtualProps{
-    proxy: Proxy;
-}
+export type PAP = Partial<AP>;
 
-export type PP = ProxyProps;
+export type ProPAP = Promise<PAP>;
 
-export type PPP = Partial<ProxyProps>;
+export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
 
-export type PPE = [Partial<PP>, EventConfigs<Proxy, Actions>];
+export type ProPOA = Promise<POA | undefined>;
 
 export interface Actions{
-    addTypingBtn(pp: PP): Promise<PPE | void>;
-    setBtnContent(pp: PP): void;
-    beTyped(pp: PP): void;
-    finale(): void;
+    addTypingBtn(self: this): ProPOA;
+    setBtnContent(self: this): void;
+    beTyped(self: this): void;
+    // finale(): void;
 }
 
 export interface ITyper{

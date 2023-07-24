@@ -1,13 +1,14 @@
+import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
+import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
-import { define } from 'be-decorated/DE.js';
-export class BeTyped extends EventTarget {
+export class BeTyped extends BE {
     #trigger;
-    async addTypingBtn(pp) {
+    async addTypingBtn(self) {
         if (this.#trigger === undefined) {
             //the check above is unlikely to ever fail.
-            const { triggerInsertPosition, self } = pp;
-            const { findAdjacentElement } = await import('be-decorated/findAdjacentElement.js');
-            const trigger = findAdjacentElement(triggerInsertPosition, self, 'button.be-typed-trigger');
+            const { triggerInsertPosition, enhancedElement } = self;
+            const { findAdjacentElement } = await import('be-enhanced/findAdjacentElement.js');
+            const trigger = findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-typed-trigger');
             if (trigger !== null)
                 this.#trigger = trigger;
             let byob = true;
@@ -18,7 +19,7 @@ export class BeTyped extends EventTarget {
                 this.#trigger.classList.add('be-typed-trigger');
                 this.#trigger.ariaLabel = 'Configure input.';
                 this.#trigger.title = 'Configure input.';
-                self.insertAdjacentElement(triggerInsertPosition, this.#trigger);
+                enhancedElement.insertAdjacentElement(triggerInsertPosition, this.#trigger);
             }
             return [{ resolved: true, byob }, { beTyped: { on: 'click', of: this.#trigger } }];
         }
@@ -26,21 +27,22 @@ export class BeTyped extends EventTarget {
             //can't think of a scenario where consumer would want to change the trigger position midstream, so not bothering to do anything here
         }
     }
+    #typer;
+    async beTyped(self) {
+        if (this.#typer === undefined) {
+            const { enhancedElement } = self;
+            const { Typer } = await import('./Typer.js');
+            this.#typer = new Typer(enhancedElement, self);
+        }
+        this.#typer.showDialog();
+    }
     setBtnContent({ buttonContent }) {
         if (this.#trigger !== undefined) {
             this.#trigger.innerHTML = buttonContent; //TODO:  sanitize
         }
     }
-    #typer;
-    async beTyped(pp) {
-        if (this.#typer === undefined) {
-            const { self } = pp;
-            const { Typer } = await import('./Typer.js');
-            this.#typer = new Typer(self, pp);
-        }
-        this.#typer.showDialog();
-    }
-    finale() {
+    detach(detachedElement) {
+        super.detach(detachedElement);
         this.#trigger = undefined;
         if (this.#typer !== undefined) {
             this.#typer.dispose();
@@ -50,20 +52,18 @@ export class BeTyped extends EventTarget {
 const tagName = 'be-typed';
 const ifWantsToBe = 'typed';
 const upgrade = 'label';
-define({
+const xe = new XE({
     config: {
         tagName,
         propDefaults: {
-            upgrade,
-            ifWantsToBe,
-            virtualProps: ['triggerInsertPosition', 'buttonContent', 'beReformable', 'labelTextContainer', 'byob'],
-            proxyPropDefaults: {
-                byob: true,
-                triggerInsertPosition: 'beforeend',
-                labelTextContainer: 'span',
-                buttonContent: '&#x2699;'
-            },
-            finale: 'finale',
+            ...propDefaults,
+            byob: true,
+            triggerInsertPosition: 'beforeend',
+            labelTextContainer: 'span',
+            buttonContent: '&#x2699;'
+        },
+        propInfo: {
+            ...propInfo
         },
         actions: {
             addTypingBtn: 'triggerInsertPosition',
@@ -73,8 +73,6 @@ define({
             }
         }
     },
-    complexPropDefaults: {
-        controller: BeTyped
-    }
+    superclass: BeTyped
 });
 register(ifWantsToBe, upgrade, tagName);

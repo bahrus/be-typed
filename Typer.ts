@@ -1,4 +1,4 @@
-import {VirtualProps, EndUserProps, ITyper} from './types';
+import {AllProps, EndUserProps, ITyper} from './types';
 import {findAdjacentElement} from 'be-decorated/findAdjacentElement.js';
 
 export class Typer implements ITyper{
@@ -7,7 +7,7 @@ export class Typer implements ITyper{
 
     constructor(public self: HTMLLabelElement, public props: EndUserProps){
         if(props === undefined){
-            this.props = self as any as VirtualProps;
+            this.props = self as any as AllProps;
         }
     }
     

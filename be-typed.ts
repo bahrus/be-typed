@@ -1,16 +1,17 @@
+import {BE, propDefaults, propInfo} from 'be-enhanced/BE.js';
+import {BEConfig} from 'be-enhanced/types';
+import {XE} from 'xtal-element/XE.js';
+import {Actions, AllProps, AP, PAP, ProPAP, POA, ProPOA, ITyper} from './types';
 import {register} from 'be-hive/register.js';
-import {define, BeDecoratedProps} from 'be-decorated/DE.js';
-import {Actions, PP, PPE, VirtualProps, Proxy, ProxyProps, ITyper} from './types';
 
-export class BeTyped extends EventTarget implements Actions{
+export class BeTyped extends BE<AP, Actions, HTMLLabelElement> implements Actions{
     #trigger: HTMLButtonElement | undefined;
-
-    async addTypingBtn(pp: PP){
+    async addTypingBtn(self: this){
         if(this.#trigger === undefined){
             //the check above is unlikely to ever fail.
-            const {triggerInsertPosition, self} = pp;
-            const {findAdjacentElement} = await import('be-decorated/findAdjacentElement.js');
-            const trigger = findAdjacentElement(triggerInsertPosition!, self, 'button.be-typed-trigger');
+            const {triggerInsertPosition, enhancedElement} = self;
+            const {findAdjacentElement} = await import('be-enhanced/findAdjacentElement.js');
+            const trigger = findAdjacentElement(triggerInsertPosition!, enhancedElement, 'button.be-typed-trigger');
             if(trigger !== null) this.#trigger = trigger as HTMLButtonElement;
             let byob = true;
             if(this.#trigger === undefined){
@@ -20,33 +21,34 @@ export class BeTyped extends EventTarget implements Actions{
                 this.#trigger.classList.add('be-typed-trigger');
                 this.#trigger.ariaLabel = 'Configure input.';
                 this.#trigger.title = 'Configure input.';
-                self.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
+                enhancedElement.insertAdjacentElement(triggerInsertPosition!, this.#trigger);
             }
-            return [{resolved: true, byob}, {beTyped: {on: 'click', of: this.#trigger}}] as PPE
+            return [{resolved: true, byob}, {beTyped: {on: 'click', of: this.#trigger}}] as POA
         }else{
             //can't think of a scenario where consumer would want to change the trigger position midstream, so not bothering to do anything here
         }
     }
 
-    setBtnContent({buttonContent}: PP): void{
-        if(this.#trigger !== undefined){
-            this.#trigger.innerHTML = buttonContent!;//TODO:  sanitize
-        }
-    }
-
     #typer: ITyper | undefined;
-    async beTyped(pp: PP) {
+    async beTyped(self: this) {
         if(this.#typer === undefined){
-            const {self} = pp;
+            const {enhancedElement} = self;
             const {Typer} = await import('./Typer.js');
-            this.#typer = new Typer(self, pp);
+            this.#typer = new Typer(enhancedElement, self);
             
         }
         this.#typer.showDialog();
         
     }
 
-    finale(){
+    setBtnContent({buttonContent}: this): void{
+        if(this.#trigger !== undefined){
+            this.#trigger.innerHTML = buttonContent!;//TODO:  sanitize
+        }
+    }
+
+    override detach(detachedElement: HTMLLabelElement): void {
+        super.detach(detachedElement);
         this.#trigger = undefined;
         if(this.#typer !== undefined){
             this.#typer.dispose();
@@ -54,29 +56,26 @@ export class BeTyped extends EventTarget implements Actions{
     }
 }
 
+export interface BeTyped extends AllProps{}
+
 const tagName = 'be-typed';
-
 const ifWantsToBe = 'typed';
-
 const upgrade = 'label';
 
-define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
-    config:{
+const xe = new XE<AP, Actions>({
+    config: {
         tagName,
         propDefaults:{
-            upgrade,
-            ifWantsToBe,
-            virtualProps: ['triggerInsertPosition', 'buttonContent', 'beReformable', 'labelTextContainer', 'byob'],
-            proxyPropDefaults:{
-                byob: true,
-                triggerInsertPosition: 'beforeend',
-                labelTextContainer:'span',
-                buttonContent: '&#x2699;'
-            },
-            finale: 'finale',
-            
+            ...propDefaults,
+            byob: true,
+            triggerInsertPosition: 'beforeend',
+            labelTextContainer: 'span',
+            buttonContent: '&#x2699;'
         },
-        actions:{
+        propInfo:{
+            ...propInfo
+        },
+        actions: {
             addTypingBtn: 'triggerInsertPosition',
             setBtnContent: {
                 ifAllOf: ['buttonContent'],
@@ -84,8 +83,7 @@ define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
             }
         }
     },
-    complexPropDefaults:{
-        controller: BeTyped
-    }
+    superclass: BeTyped
 });
+
 register(ifWantsToBe, upgrade, tagName);
