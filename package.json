@@ -37,10 +37,7 @@
   },
   "devDependencies": {
     "may-it-serve": "0.0.5",
-    "@playwright/test": "1.36.1",
-    "be-clonable": "0.0.19",
-    "be-delible": "0.0.14",
-    "be-promising": "0.0.5"
+    "@playwright/test": "1.36.1"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
