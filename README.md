@@ -3,19 +3,14 @@
 Allow the user to customize input element during run time.
 
 [![Playwright Tests](https://github.com/bahrus/be-typed/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-typed/actions/workflows/CI.yml)
-
 <a href="https://nodei.co/npm/be-typed/"><img src="https://nodei.co/npm/be-typed.png"></a>
-
-Size of package, including custom element behavior framework (be-decorated):
-
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-typed?style=for-the-badge)](https://bundlephobia.com/result?p=be-typed)
-
-Size of new code in this package:
-
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-typed?compression=gzip">
 
+Markup:
+
 ```html
-<label be-typed></label>
+<label  be-typed><span>[Specify Name]</span></label>
 ```
 
 [x]: Adds edit button inside label.
