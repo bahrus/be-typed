@@ -16,7 +16,8 @@
     "./be-typed.js": "./be-typed.js"
   },
   "files": [
-    "*.*"
+    "*.js",
+    "types.d.ts"
   ],
   "types": "types.d.ts",
   "scripts": {

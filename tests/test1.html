@@ -7,29 +7,20 @@
     <title>Document</title>
 </head>
 <body>
-    <label  be-promising='{
-        "be": [
-            {"typed": {"beReformable": true}},
-            "clonable",
-            "delible"
-        ]
-    }'><span>[Specify Name]</span></label>
+    <label  be-typed><span>[Specify Name]</span></label>
     <div id=target></div>
     <script type=importmap>
         {
             "imports": {
                 "trans-render/": "../node_modules/trans-render/",
                 "xtal-element/": "../node_modules/xtal-element/",
-                "be-decorated/": "../node_modules/be-decorated/",
+                "be-enhanced/": "../node_modules/be-enhanced/",
                 "be-hive/":  "../node_modules/be-hive/"
             }
         }
     </script>
     <script type=module>
         import '../be-typed.js';
-        import '/node_modules/be-delible/be-delible.js';
-        import '/node_modules/be-clonable/be-clonable.js';
-        import '/node_modules/be-promising/be-promising.js';
     </script>
     <script>
         function runScript(){
