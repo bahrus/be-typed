@@ -31,14 +31,14 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-enhanced": "0.0.50",
-    "be-hive": "0.0.121",
-    "trans-render": "0.0.705",
-    "xtal-element": "0.0.578"
+    "be-enhanced": "0.0.69",
+    "be-hive": "0.0.138",
+    "trans-render": "0.0.741",
+    "xtal-element": "0.0.598"
   },
   "devDependencies": {
-    "may-it-serve": "0.0.5",
-    "@playwright/test": "1.37.1"
+    "may-it-serve": "0.0.6",
+    "@playwright/test": "1.42.1"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
