@@ -1,6 +1,5 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
-import { register } from 'be-hive/register.js';
 export class BeTyped extends BE {
     #trigger;
     async addTypingBtn(self) {
@@ -49,9 +48,7 @@ export class BeTyped extends BE {
         }
     }
 }
-const tagName = 'be-typed';
-const ifWantsToBe = 'typed';
-const upgrade = 'label';
+export const tagName = 'be-typed';
 const xe = new XE({
     config: {
         tagName,
@@ -75,4 +72,3 @@ const xe = new XE({
     },
     superclass: BeTyped
 });
-register(ifWantsToBe, upgrade, tagName);

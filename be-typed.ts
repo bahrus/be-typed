@@ -2,7 +2,6 @@ import {BE, propDefaults, propInfo} from 'be-enhanced/BE.js';
 import {BEConfig} from 'be-enhanced/types';
 import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, ProPOA, ITyper} from './types';
-import {register} from 'be-hive/register.js';
 
 export class BeTyped extends BE<AP, Actions, HTMLLabelElement> implements Actions{
     #trigger: HTMLButtonElement | undefined;
@@ -58,9 +57,8 @@ export class BeTyped extends BE<AP, Actions, HTMLLabelElement> implements Action
 
 export interface BeTyped extends AllProps{}
 
-const tagName = 'be-typed';
-const ifWantsToBe = 'typed';
-const upgrade = 'label';
+export const tagName = 'be-typed';
+
 
 const xe = new XE<AP, Actions>({
     config: {
@@ -85,5 +83,3 @@ const xe = new XE<AP, Actions>({
     },
     superclass: BeTyped
 });
-
-register(ifWantsToBe, upgrade, tagName);
