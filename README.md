@@ -1,4 +1,4 @@
-# be-typed
+# be-typed (⚙️)
 
 Allow the user to customize input element during run time.
 
