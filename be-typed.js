@@ -111,6 +111,9 @@ class BeTyped extends BE {
     }
 
     async detach(el){
+        if(this.#ac !== undefined){
+            this.#ac.abort();
+        }
         super.detach(el);
     }
 }
