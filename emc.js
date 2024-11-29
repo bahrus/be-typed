@@ -22,3 +22,6 @@ export const emc = {
         return BeTyped;
     }
 };
+
+const mose = seed(emc);
+MountObserver.synthesize(document, BeHive, mose);
