@@ -16,7 +16,6 @@ Markup:
 [x]: Adds edit button inside label.
 [x]: Edit button opens dialog that allows user to select type of input (boolean, number, etc).
 [x]: Can also specify validation attributes
-[x]: Some attributes related to be-reformable can also optionally be edited.
 [x]: Dialog also supports selecting name of input element.
 
 ## Viewing this element locally
@@ -25,11 +24,12 @@ Any web server than can serve static files will do, but...
 
 1.  Install git.
 2.  Fork/clone this repo.
-3.  Install node.
-4.  Open command window to folder where you cloned this repo.
-5.  > npm install
-6.  > npm run serve
-7.  Open http://localhost:3030/demo/dev in a modern browser.
+3.  Install node.js
+4.  Install Python 3 or later
+5.  Open command window to folder where you cloned this repo.
+6.  > npm install
+7.  > npm run serve
+8.  Open http://localhost:8000/demo/ in a modern browser.
 
 ## Running Tests
 

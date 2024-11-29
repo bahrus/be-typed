@@ -13,7 +13,9 @@
   "module": "be-typed.js",
   "exports": {
     ".": "./be-typed.js",
-    "./be-typed.js": "./be-typed.js"
+    "./be-typed.js": "./be-typed.js",
+    "./emc.js": "./emc.js",
+    "./⚙️.js": "./⚙️.js"
   },
   "files": [
     "*.js",
