@@ -20,10 +20,10 @@ or
 ```
 
 
-- [x]: Adds edit button inside label.
-- [x]: Edit button opens dialog that allows user to select type of input (boolean, number, etc).
-- [x]: Can also specify validation attributes
-- [x]: Dialog also supports selecting name of input element.
+- [x] Adds edit button inside label.
+- [x] Edit button opens dialog that allows user to select type of input (boolean, number, etc).
+- [x] Can also specify validation attributes
+- [x] Dialog also supports selecting name of input element.
 
 ## Viewing this element locally
 
