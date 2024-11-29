@@ -20,7 +20,7 @@ class BeTyped extends BE {
             byob: true,
             triggerInsertPosition: 'beforeend',
             labelTextContainer: 'span',
-            buttonContent: '&#x2699;'
+            buttonContent: '⚙️'
         },
         propInfo:{
             ...propInfo,
@@ -28,6 +28,12 @@ class BeTyped extends BE {
         positractions: [resolved, rejected],
         compacts:{
             when_triggerInsertPosition_changes_invoke_hydrate: 0
+        },
+        actions:{
+            setBtnContent: {
+                ifAllOf: ['buttonContent'],
+                ifNoneOf: ['byob']
+            }
         }
     }
     /**
@@ -45,6 +51,7 @@ class BeTyped extends BE {
      * @returns 
      */
     async hydrate(self){
+        let byob = true;
         if(this.#triggerRef?.deref() === undefined){
             //the check above is unlikely to ever fail.
             const {triggerInsertPosition, enhancedElement} = self;
@@ -52,7 +59,6 @@ class BeTyped extends BE {
             
             const trigger = /** @type {HTMLButtonElement}*/ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-typed-trigger'));
             if(trigger !== null) this.#triggerRef = new WeakRef(trigger);
-            let byob = true;
             if(this.#triggerRef === undefined){
                 byob = false;
                 const newTrigger = document.createElement('button');
@@ -72,14 +78,28 @@ class BeTyped extends BE {
         this.#ac = new AbortController();
         this.#triggerRef?.deref()?.addEventListener('click', this, {signal: this.#ac.signal});
         return /** @type {PAP} */ ({
-            resolved: true
+            resolved: true,
+            byob
         });
     }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    setBtnContent(self){
+        const {buttonContent} = self;
+        const trigger = this.#triggerRef?.deref();
+        if(trigger === undefined) return;
+        //TODO: use trusted types
+        trigger.textContent = buttonContent;
+    }
+
     /**
      * @type {ITyper | undefined}
      */
     #typer;
-    async handleEvent(e){
+    async handleEvent(){
         const self = /** @type {BAP} */ /** @type {any} */(this);
         if(this.#typer === undefined){
             const {enhancedElement} = self;
