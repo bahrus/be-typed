@@ -13,6 +13,13 @@ Markup:
 <label  be-typed><span>[Specify Name]</span></label>
 ```
 
+or
+
+```html
+<label  ⚙️><span>[Specify Name]</span></label>
+```
+
+
 [x]: Adds edit button inside label.
 [x]: Edit button opens dialog that allows user to select type of input (boolean, number, etc).
 [x]: Can also specify validation attributes
