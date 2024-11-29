@@ -38,7 +38,7 @@ export class BeTyped extends EventTarget implements Actions{
     async beTyped(pp: PP) {
         if(this.#typer === undefined){
             const {self} = pp;
-            const {Typer} = await import('./Typer.js');
+            const {Typer} = await import('../Typer.js');
             this.#typer = new Typer(self, pp);
             
         }

@@ -32,7 +32,7 @@ export class BeTyped extends BE<AP, Actions, HTMLLabelElement> implements Action
     async beTyped(self: this) {
         if(this.#typer === undefined){
             const {enhancedElement} = self;
-            const {Typer} = await import('./Typer.js');
+            const {Typer} = await import('../Typer.js');
             this.#typer = new Typer(enhancedElement, self);
             
         }

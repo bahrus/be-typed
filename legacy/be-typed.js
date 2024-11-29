@@ -30,7 +30,7 @@ export class BeTyped extends BE {
     async beTyped(self) {
         if (this.#typer === undefined) {
             const { enhancedElement } = self;
-            const { Typer } = await import('./Typer.js');
+            const { Typer } = await import('../Typer.js');
             this.#typer = new Typer(enhancedElement, self);
         }
         this.#typer.showDialog();
