@@ -1,14 +1,25 @@
+// @ts-check
+/** @import {Actions, PAP, AllProps, AP, BAP, ITyper} from './ts-refs/be-typed/types.d.ts' */;
+
 export class Typer {
-    self;
+    /** @type {HTMLElement} */
+    enhancedElement;
+    /** @type {BAP} */
     props;
     #trigger;
+    /**
+     * @type {HTMLDialogElement}
+     */
     #dialog;
-    constructor(self, props) {
-        this.self = self;
+    /**
+     * 
+     * @param {HTMLElement} enhancedElement 
+     * @param {BAP} props 
+     */
+    constructor(enhancedElement, props) {
+        this.enhancedElement = enhancedElement;
         this.props = props;
-        if (props === undefined) {
-            this.props = self;
-        }
+
     }
     #dialogAC = new AbortController();
     showDialog() {
@@ -42,8 +53,14 @@ export class Typer {
         <label style="display:block;">Name:
             <input type="text" name="name" />
         </label>
+        <label style="display:block;">Name attribute:
+            <select name=name-attr>
+                <option value="name" selected>Name</option>
+                <option value=":">:Name</option>
+            </select>
+        </label>
         <label style="display:block;">Type:
-            <select>
+            <select name=type>
                 <option value="text">Text</option>
                 <option value="number">Number</option>
                 <option value="date">Date</option>
@@ -91,7 +108,7 @@ export class Typer {
         <button value="default">Apply</button>
     </form>
                 `;
-                dialog.querySelector('[value="default"]').addEventListener('click', e => {
+                dialog.querySelector('[value="default"]')?.addEventListener('click', e => {
                     this.applyDialog(e);
                 }, { signal: this.#dialogAC.signal });
                 document.body.appendChild(dialog);
@@ -100,11 +117,11 @@ export class Typer {
                 this.#dialog = globalThis[guid];
             }
         }
-        const input = this.self.querySelector('input');
+        const input = this.enhancedElement.querySelector('input');
         if (input !== null) {
             this.#dialog.querySelector('input[name="name"]').value = input.name;
             const currentType = input.type;
-            this.#dialog.querySelector(`option[value="${currentType}"]`).selected = true;
+            this.#dialog.querySelector(`select[name="type"]>option[value="${currentType}"]`).selected = true;
         }
         this.#dialog.showModal();
     }
@@ -138,17 +155,17 @@ export class Typer {
     }
     applyDialog(e) {
         const dialog = e.target.closest('dialog');
-        let inp = this.self.querySelector('input');
+        let inp = this.enhancedElement.querySelector('input');
         if (inp === null) {
             inp = document.createElement('input');
-            const btn = this.self.querySelector('button');
+            const btn = this.enhancedElement.querySelector('button');
             btn.before(inp);
         }
-        inp.type = dialog.querySelector('select').value;
+        inp.type = dialog.querySelector('select[name="type"]').value;
         const name = dialog.querySelector('input[name="name"]').value;
         if (name !== '') {
             inp.name = name;
-            const labelTextContainer = this.self.querySelector(this.props.labelTextContainer);
+            const labelTextContainer = this.enhancedElement.querySelector(this.props.labelTextContainer);
             if (labelTextContainer === null)
                 throw '404';
             labelTextContainer.textContent = name + ': ';

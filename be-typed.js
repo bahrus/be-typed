@@ -18,7 +18,7 @@ class BeTyped extends BE {
         propDefaults:{
             byob: true,
             triggerInsertPosition: 'beforeend',
-            //labelTextContainer: 'span',
+            labelTextContainer: 'span',
             buttonContent: '⚙️'
         },
         propInfo:{
