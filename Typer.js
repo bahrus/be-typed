@@ -134,18 +134,37 @@ export class Typer {
                 }
         }
     }
+    /**
+     * 
+     * @param {Event} e 
+     */
     applyDialog(e) {
-        const dialog = e.target.closest('dialog');
+        const target = e.target;
+        if(!(target instanceof HTMLButtonElement )) return;
+        const dialog = target.closest('dialog');
+        if(dialog === null) throw 404;
         let inp = this.enhancedElement.querySelector('input');
         if (inp === null) {
             inp = document.createElement('input');
             const btn = this.enhancedElement.querySelector('button');
             btn?.before(inp);
         }
-        inp.type = dialog.querySelector('select[name="type"]').value;
-        const name = dialog.querySelector('input[name="name"]').value;
+        const typeSelector = /** @type {HTMLSelectElement | null} */ (dialog.querySelector('select[name="type"]'));
+        if(typeSelector === null) throw 404;
+        inp.type = typeSelector.value;
+        const nameNamer = /** @type {HTMLInputElement | null} */ (dialog.querySelector('input[name="name"]'));
+        if(nameNamer === null) throw 404;
+        const name = nameNamer.value;
         if (name !== '') {
-            inp.name = name;
+            const nameAttrEl = /** @type {HTMLSelectElement | null} */ (dialog.querySelector('select[name="name-attr"]'));
+            if(nameAttrEl === null) throw 404;
+            const nameAttr = nameAttrEl.value;
+            if(nameAttr === 'name'){
+                inp.name = name;
+            }else{
+                inp.setAttribute(`:${name}`, '');
+            }
+            
             const labelTextContainer = this.enhancedElement.querySelector(this.props.labelTextContainer);
             if (labelTextContainer === null)
                 throw '404';
