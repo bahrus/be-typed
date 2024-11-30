@@ -32,12 +32,6 @@ export class Typer {
         <label style="display:block;">Name:
             <input type="text" name="name" />
         </label>
-        <label style="display:block;">Name attribute:
-            <select name=name-attr>
-                <option value="name" selected>Name</option>
-                <option value=":">:Name</option>
-            </select>
-        </label>
         <label style="display:block;">Type:
             <select name=type>
                 <option value="text">Text</option>
@@ -84,6 +78,12 @@ export class Typer {
         </label>
         <details>
             <summary>Advanced Settings</summary>
+            <label style="display:block;">Name attribute:
+            <select name=name-attr>
+                <option value="name" selected>name</option>
+                <option value=":">:[name]</option>
+            </select>
+        </label>
         </details>
         <button value="cancel">Cancel</button>
         <button value="default">Apply</button>
