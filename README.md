@@ -24,7 +24,7 @@ or
 - [x] Edit button opens dialog that allows user to select type of input (boolean, number, etc).
 - [x] Can also specify validation attributes
 - [x] Dialog also supports selecting name of input element.
-- [x] Be able to specify :name for be-reformable, so it becomes part of path or header
+- [x] Be able to specify :name for [be-reformable](https://github.com/bahrus/be-reformable), so it becomes part of path or header
 
 ## Viewing this element locally
 
