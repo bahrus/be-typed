@@ -6,7 +6,6 @@ export class Typer {
     enhancedElement;
     /** @type {BAP} */
     props;
-    #trigger;
     /**
      * @type {HTMLDialogElement}
      */
@@ -28,26 +27,6 @@ export class Typer {
                 const dialog = document.createElement('dialog');
                 dialog.id = guid;
                 this.#dialog = dialog;
-                let beReformableSettings = '';
-                if (this.props.beReformable) {
-                    beReformableSettings = String.raw `
-    <fieldset>
-        <legend>beReformable Settings</legend>
-        <label>
-            Path index:
-            <input type=number name=data-path-idx>
-        </label>
-        <label>
-            Path lhs:
-            <input type=text name=da-path-lhs>
-        </label>
-        <label>
-            Path rhs:
-            <input type=text name=da-path-rhs>
-        </label>
-    </fieldset>
-                    `;
-                }
                 dialog.innerHTML = String.raw `
     <form method="dialog">
         <label style="display:block;">Name:
@@ -103,7 +82,9 @@ export class Typer {
             Min:
             <input name=min type=number>
         </label>
-        ${beReformableSettings}
+        <details>
+            <summary>Advanced Settings</summary>
+        </details>
         <button value="cancel">Cancel</button>
         <button value="default">Apply</button>
     </form>
@@ -159,7 +140,7 @@ export class Typer {
         if (inp === null) {
             inp = document.createElement('input');
             const btn = this.enhancedElement.querySelector('button');
-            btn.before(inp);
+            btn?.before(inp);
         }
         inp.type = dialog.querySelector('select[name="type"]').value;
         const name = dialog.querySelector('input[name="name"]').value;
