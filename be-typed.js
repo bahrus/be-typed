@@ -8,12 +8,11 @@ import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
 
 /**
  * @implements {Actions}
- * @implements {EventListenerObject}
  * 
  */
 class BeTyped extends BE {
     /**
-     * @type {BEConfig<BAP, Actions & IEnhancement, any>}
+     * @type {BEConfig<BAP, Actions & IEnhancement>}
      */
     static config = {
         propDefaults:{
@@ -24,60 +23,48 @@ class BeTyped extends BE {
         },
         propInfo:{
             ...propInfo,
+            trigger: {
+                ro: true,
+            }
         },
         positractions: [resolved, rejected],
         compacts:{
-            when_triggerInsertPosition_changes_invoke_hydrate: 0
+            when_triggerInsertPosition_changes_invoke_addTypeBtn: 0
         },
         actions:{
             setBtnContent: {
                 ifAllOf: ['buttonContent'],
                 ifNoneOf: ['byob']
             }
+        },
+        handlers:{
+            trigger_to_openDialog_on: 'click'
         }
     }
-    /**
-     * @type {WeakRef<HTMLButtonElement> | undefined}
-     */
-    #triggerRef;
+
     de = de;
-    /**
-     * @type {AbortController | undefined}
-     */
-    #ac;
+
     /**
      * 
      * @param {BAP} self 
      * @returns 
      */
-    async hydrate(self){
+    async addTypeBtn(self){
         let byob = true;
-        if(this.#triggerRef?.deref() === undefined){
-            //the check above is unlikely to ever fail.
-            const {triggerInsertPosition, enhancedElement} = self;
-            const {findAdjacentElement} = await import('trans-render/lib/findAdjacentElement.js');
-            
-            const trigger = /** @type {HTMLButtonElement}*/ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-typed-trigger'));
-            if(trigger !== null) this.#triggerRef = new WeakRef(trigger);
-            if(this.#triggerRef === undefined){
-                byob = false;
-                const newTrigger = document.createElement('button');
-                newTrigger.type = 'button';
-                newTrigger.classList.add('be-typed-trigger');
-                newTrigger.ariaLabel = 'Configure input.';
-                newTrigger.title = 'Configure input.';
-                enhancedElement.insertAdjacentElement(triggerInsertPosition, newTrigger);
-                this.#triggerRef = new WeakRef(newTrigger);
-            }
-        }else{
-            //can't think of a scenario where consumer would want to change the trigger position midstream, so not bothering to do anything here
+        const {triggerInsertPosition, enhancedElement} = self;
+        const {findAdjacentElement} = await import('trans-render/lib/findAdjacentElement.js');
+        let trigger = /** @type {HTMLButtonElement | null} */ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-clonable-trigger'));
+        if(trigger === null){
+            byob = false;
+            trigger = document.createElement('button');
+            trigger.type = 'button';
+            trigger.classList.add('be-typed-trigger');
+            trigger.ariaLabel = 'Configure input.';
+            trigger.title = 'Configure input.';
+            enhancedElement.insertAdjacentElement(triggerInsertPosition, trigger);
         }
-        if(this.#ac !== undefined){
-            this.#ac.abort();
-        }
-        this.#ac = new AbortController();
-        this.#triggerRef?.deref()?.addEventListener('click', this, {signal: this.#ac.signal});
         return /** @type {PAP} */ ({
+            trigger: new WeakRef(trigger),
             resolved: true,
             byob
         });
@@ -88,19 +75,23 @@ class BeTyped extends BE {
      * @param {BAP} self 
      */
     setBtnContent(self){
-        const {buttonContent} = self;
-        const trigger = this.#triggerRef?.deref();
-        if(trigger === undefined) return;
+        const {buttonContent, trigger} = self;
+        const triggerEl = trigger.deref();
+        if(triggerEl === undefined) return;
         //TODO: use trusted types
-        trigger.textContent = buttonContent;
+        triggerEl.textContent = buttonContent;
     }
 
     /**
      * @type {ITyper | undefined}
      */
     #typer;
-    async handleEvent(){
-        const self = /** @type {BAP} */ /** @type {any} */(this);
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    async openDialog(self){
         if(this.#typer === undefined){
             const {enhancedElement} = self;
             const {Typer} = await import('./Typer.js');
@@ -110,12 +101,6 @@ class BeTyped extends BE {
         this.#typer.showDialog();
     }
 
-    async detach(el){
-        if(this.#ac !== undefined){
-            this.#ac.abort();
-        }
-        super.detach(el);
-    }
 }
 
 await BeTyped.bootUp();
