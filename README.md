@@ -7,7 +7,7 @@ Allow the user to customize input element during run time.
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-typed?style=for-the-badge)](https://bundlephobia.com/result?p=be-typed)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-typed?compression=gzip">
 
-Markup:
+## Markup:
 
 ```html
 <label  be-typed><span>[Specify Name]</span></label>
@@ -56,5 +56,5 @@ Any web server than can serve static files will do, but...
 ## Referencing via ESM Modules:
 
 ```JavaScript
-import 'be-lazy/be-typed.js';
+import 'be-typed/be-typed.js';
 ```
