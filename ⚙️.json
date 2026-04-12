@@ -1,0 +1,15 @@
+﻿{
+    "enhConfig": {
+        "enhKey": "ΓÜÖ∩╕Å",
+        "spawn": "be-typed/be-typed.js",
+        "withAttrs": {
+            "base": "ΓÜÖ∩╕Å",
+            "triggerInsertPosition": "${base}-trigger-insert-position",
+            "labelTextContainer": "${base}-label-text-container",
+            "buttonContent": "${base}-button-content",
+            "_nudge": {
+                "instanceOf": "Boolean"
+            }
+        }
+    }
+}

@@ -1,74 +1,107 @@
-import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
-import { XE } from 'xtal-element/XE.js';
-export class BeTyped extends BE {
-    #trigger;
-    async addTypingBtn(self) {
-        if (this.#trigger === undefined) {
-            //the check above is unlikely to ever fail.
-            const { triggerInsertPosition, enhancedElement } = self;
-            const { findAdjacentElement } = await import('be-enhanced/findAdjacentElement.js');
-            const trigger = findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-typed-trigger');
-            if (trigger !== null)
-                this.#trigger = trigger;
-            let byob = true;
-            if (this.#trigger === undefined) {
-                byob = false;
-                this.#trigger = document.createElement('button');
-                this.#trigger.type = 'button';
-                this.#trigger.classList.add('be-typed-trigger');
-                this.#trigger.ariaLabel = 'Configure input.';
-                this.#trigger.title = 'Configure input.';
-                enhancedElement.insertAdjacentElement(triggerInsertPosition, this.#trigger);
-            }
-            return [{ resolved: true, byob }, { beTyped: { on: 'click', of: this.#trigger } }];
-        }
-        else {
-            //can't think of a scenario where consumer would want to change the trigger position midstream, so not bothering to do anything here
-        }
-    }
-    #typer;
-    async beTyped(self) {
-        if (this.#typer === undefined) {
-            const { enhancedElement } = self;
-            const { Typer } = await import('../Typer.js');
-            this.#typer = new Typer(enhancedElement, self);
-        }
-        this.#typer.showDialog();
-    }
-    setBtnContent({ buttonContent }) {
-        if (this.#trigger !== undefined) {
-            this.#trigger.innerHTML = buttonContent; //TODO:  sanitize
-        }
-    }
-    detach(detachedElement) {
-        super.detach(detachedElement);
-        this.#trigger = undefined;
-        if (this.#typer !== undefined) {
-            this.#typer.dispose();
-        }
-    }
-}
-export const tagName = 'be-typed';
-const xe = new XE({
-    config: {
-        tagName,
-        propDefaults: {
-            ...propDefaults,
+// @ts-check
+import { resolved, rejected, propInfo} from 'be-enhanced/cc.js';
+import { BE } from 'be-enhanced/BE.js';
+import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
+
+/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
+/** @import {Actions, PAP, AllProps, AP, BAP, ITyper} from './ts-refs/be-typed/types.d.ts' */;
+
+/**
+ * @implements {Actions}
+ * 
+ */
+class BeTyped extends BE {
+    /**
+     * @type {BEConfig<BAP, Actions & IEnhancement>}
+     */
+    static config = {
+        propDefaults:{
             byob: true,
             triggerInsertPosition: 'beforeend',
             labelTextContainer: 'span',
-            buttonContent: '&#x2699;'
+            buttonContent: '⚙️'
         },
-        propInfo: {
-            ...propInfo
+        propInfo:{
+            ...propInfo,
+            trigger: {
+                ro: true,
+            }
         },
-        actions: {
-            addTypingBtn: 'triggerInsertPosition',
+        positractions: [resolved, rejected],
+        compacts:{
+            when_triggerInsertPosition_changes_call_addTypeBtn: 0
+        },
+        actions:{
             setBtnContent: {
                 ifAllOf: ['buttonContent'],
-                ifNoneOf: ['byob'],
+                ifNoneOf: ['byob']
             }
+        },
+        handlers:{
+            trigger_to_openDialog_on: 'click'
         }
-    },
-    superclass: BeTyped
-});
+    }
+
+    de = de;
+
+    /**
+     * 
+     * @param {BAP} self 
+     * @returns 
+     */
+    async addTypeBtn(self){
+        let byob = true;
+        const {triggerInsertPosition, enhancedElement} = self;
+        const {findAdjacentElement} = await import('trans-render/lib/findAdjacentElement.js');
+        let trigger = /** @type {HTMLButtonElement | null} */ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-clonable-trigger'));
+        if(trigger === null){
+            byob = false;
+            trigger = document.createElement('button');
+            trigger.type = 'button';
+            trigger.classList.add('be-typed-trigger');
+            trigger.ariaLabel = 'Configure input.';
+            trigger.title = 'Configure input.';
+            enhancedElement.insertAdjacentElement(triggerInsertPosition, trigger);
+        }
+        return /** @type {PAP} */ ({
+            trigger: new WeakRef(trigger),
+            resolved: true,
+            byob
+        });
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    setBtnContent(self){
+        const {buttonContent, trigger} = self;
+        const triggerEl = trigger.deref();
+        if(triggerEl === undefined) return;
+        //TODO: use trusted types
+        triggerEl.textContent = buttonContent;
+    }
+
+    /**
+     * @type {ITyper | undefined}
+     */
+    #typer;
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    async openDialog(self){
+        if(this.#typer === undefined){
+            const {enhancedElement} = self;
+            const {Typer} = await import('./Typer.js');
+            this.#typer = new Typer(enhancedElement, self);
+            
+        }
+        this.#typer.showDialog();
+    }
+
+}
+
+await BeTyped.bootUp();
+export { BeTyped }

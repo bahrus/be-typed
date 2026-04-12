@@ -23,9 +23,10 @@
   ],
   "types": "types.d.ts",
   "scripts": {
+    "build": "node emc.mjs > emc.json && node ⚙️.mjs > ⚙️.json",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
     "test": "playwright test",
-    "serve": "python3 ./node_modules/ssi-server/ssi_server.py",
-    "safari": "npx playwright wk http://localhost:3030",
+    "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
   },
   "repository": {
@@ -33,13 +34,13 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-enhanced": "0.0.155",
-    "be-hive": "0.0.234",
-    "trans-render": "0.0.863"
+    "be-hive": "0.1.11",
+    "mount-observer": "0.1.27",
+    "roundabout-lib": "0.0.7"
   },
   "devDependencies": {
-    "ssi-server": "0.0.1",
-    "@playwright/test": "1.49.0"
+    "@playwright/test": "1.59.1",
+    "spa-ssi": "0.0.27"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",

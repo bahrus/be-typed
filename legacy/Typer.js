@@ -1,10 +1,10 @@
 // @ts-check
-/** @import {Actions, PAP, AllProps, AP, ITyper} from './types/be-typed/types' */;
+/** @import {Actions, PAP, AllProps, AP, BAP, ITyper} from './ts-refs/be-typed/types.d.ts' */;
 
 export class Typer {
-    /** @type {Element} */
+    /** @type {HTMLElement} */
     enhancedElement;
-    /** @type {AP} */
+    /** @type {BAP} */
     props;
     /**
      * @type {HTMLDialogElement}
@@ -12,8 +12,8 @@ export class Typer {
     #dialog;
     /**
      * 
-     * @param {Element} enhancedElement 
-     * @param {AP} props 
+     * @param {HTMLElement} enhancedElement 
+     * @param {BAP} props 
      */
     constructor(enhancedElement, props) {
         this.enhancedElement = enhancedElement;

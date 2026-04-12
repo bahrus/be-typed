@@ -1,59 +1,63 @@
 // @ts-check
-import { resolved, rejected, propInfo} from 'be-enhanced/cc.js';
-import { BE } from 'be-enhanced/BE.js';
-import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
+/** @import {Actions, PAP, AllProps, AP} from './types/be-typed/types' */;
+/** @import {RoundaboutOptions} from './types/roundabout/types' */;
+/** @import {ElementEnhancementGateway} from './types/assign-gingerly/types' */;
+/** @import {EMC} from './types/mount-observer/types' */;
+/** @import {RAConfig} from './types/roundabout/types' */;
+/** @import {ITyper} from './types/be-typed/types' */;
+/**
+ * @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>}
+ */
+import emc from './emc.json' with {type: 'json'};
 
-/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP, BAP, ITyper} from './ts-refs/be-typed/types.d.ts' */;
+const {customData} = emc;
 
 /**
  * @implements {Actions}
- * 
  */
-class BeTyped extends BE {
+class BeTyped {
+
     /**
-     * @type {BEConfig<BAP, Actions & IEnhancement>}
+     * @this {AllProps & Actions}
+     * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {*} ctx 
+     * @param {AllProps} initVals 
      */
-    static config = {
-        propDefaults:{
-            byob: true,
-            triggerInsertPosition: 'beforeend',
-            labelTextContainer: 'span',
-            buttonContent: '⚙️'
-        },
-        propInfo:{
-            ...propInfo,
-            trigger: {
-                ro: true,
-            }
-        },
-        positractions: [resolved, rejected],
-        compacts:{
-            when_triggerInsertPosition_changes_call_addTypeBtn: 0
-        },
-        actions:{
-            setBtnContent: {
-                ifAllOf: ['buttonContent'],
-                ifNoneOf: ['byob']
-            }
-        },
-        handlers:{
-            trigger_to_openDialog_on: 'click'
-        }
+    constructor(enhancedElement, ctx, initVals){
+        this.init(this, enhancedElement, initVals);
     }
 
-    de = de;
+    /**
+     * @param {AllProps} self 
+     * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {PAP} initVals 
+     */
+    async init(self, enhancedElement, initVals){
+        const {defaultPropVals} = customData;
+        /**
+         * @type {RoundaboutOptions}
+         */
+        const raOptions = {
+            ...customData,
+            vm: self,
+            initialPropVals: {
+                enhancedElement,
+                ...defaultPropVals,
+                ...initVals
+            }
+        };
+        (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+    }
 
     /**
-     * 
-     * @param {BAP} self 
-     * @returns 
+     * @param {AP} self 
+     * @returns {ProPAP}
      */
     async addTypeBtn(self){
         let byob = true;
         const {triggerInsertPosition, enhancedElement} = self;
-        const {findAdjacentElement} = await import('trans-render/lib/findAdjacentElement.js');
-        let trigger = /** @type {HTMLButtonElement | null} */ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-clonable-trigger'));
+        const {findAdjacentElement} = await import('be-hive/findAdjacentElement.js');
+        let trigger = /** @type {HTMLButtonElement | null} */ (findAdjacentElement(triggerInsertPosition, enhancedElement, 'button.be-typed-trigger'));
         if(trigger === null){
             byob = false;
             trigger = document.createElement('button');
@@ -65,20 +69,17 @@ class BeTyped extends BE {
         }
         return /** @type {PAP} */ ({
             trigger: new WeakRef(trigger),
-            resolved: true,
             byob
         });
     }
 
     /**
-     * 
-     * @param {BAP} self 
+     * @param {AP} self 
      */
     setBtnContent(self){
         const {buttonContent, trigger} = self;
         const triggerEl = trigger.deref();
         if(triggerEl === undefined) return;
-        //TODO: use trusted types
         triggerEl.textContent = buttonContent;
     }
 
@@ -88,8 +89,7 @@ class BeTyped extends BE {
     #typer;
 
     /**
-     * 
-     * @param {BAP} self 
+     * @param {AP} self 
      */
     async openDialog(self){
         if(this.#typer === undefined){
@@ -103,5 +103,4 @@ class BeTyped extends BE {
 
 }
 
-await BeTyped.bootUp();
 export { BeTyped }
