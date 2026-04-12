@@ -29,7 +29,7 @@ class BeTyped extends BE {
         },
         positractions: [resolved, rejected],
         compacts:{
-            when_triggerInsertPosition_changes_invoke_addTypeBtn: 0
+            when_triggerInsertPosition_changes_call_addTypeBtn: 0
         },
         actions:{
             setBtnContent: {
