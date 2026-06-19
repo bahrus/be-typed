@@ -1,16 +1,10 @@
 // @ts-check
-/** @import {Actions, PAP, AllProps, AP} from './types/be-typed/types' */;
+/** @import {Actions, PAP, ProPAP, AllProps, AP} from './types/be-typed/types' */;
 /** @import {RoundaboutOptions} from './types/roundabout/types' */;
-/** @import {ElementEnhancementGateway} from './types/assign-gingerly/types' */;
+/** @import {ElementEnhancementGateway, SpawnContext} from './types/assign-gingerly/types' */;
 /** @import {EMC} from './types/mount-observer/types' */;
 /** @import {RAConfig} from './types/roundabout/types' */;
 /** @import {ITyper} from './types/be-typed/types' */;
-/**
- * @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>}
- */
-import emc from './emc.json' with {type: 'json'};
-
-const {customData} = emc;
 
 /**
  * @implements {Actions}
@@ -20,20 +14,21 @@ class BeTyped {
     /**
      * @this {AllProps & Actions}
      * @param {Element & ElementEnhancementGateway} enhancedElement 
-     * @param {*} ctx 
-     * @param {AllProps} initVals 
+     * @param {SpawnContext} ctx 
+     * @param {PAP} initVals 
      */
     constructor(enhancedElement, ctx, initVals){
-        this.init(this, enhancedElement, initVals);
+        this.init(this, enhancedElement, ctx, initVals);
     }
 
     /**
      * @param {AllProps} self 
      * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {SpawnContext} ctx 
      * @param {PAP} initVals 
      */
-    async init(self, enhancedElement, initVals){
-        const {defaultPropVals} = customData;
+    async init(self, enhancedElement, ctx, initVals){
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
         /**
          * @type {RoundaboutOptions}
          */
@@ -42,7 +37,7 @@ class BeTyped {
             vm: self,
             initialPropVals: {
                 enhancedElement,
-                ...defaultPropVals,
+                ...customData?.defaultPropVals,
                 ...initVals
             }
         };
