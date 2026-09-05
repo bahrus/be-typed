@@ -9,7 +9,7 @@
  */
 export const emc = {
     enhConfig: {
-        enhKey: 'BeTyped',
+        enhKey: 'beTyped',
         spawn: 'be-typed/be-typed.js',
         withAttrs: {
             base: 'be-typed',

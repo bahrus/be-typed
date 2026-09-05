@@ -1,6 +1,6 @@
-﻿{
+{
     "enhConfig": {
-        "enhKey": "BeTyped",
+        "enhKey": "beTyped",
         "spawn": "be-typed/be-typed.js",
         "withAttrs": {
             "base": "be-typed",
@@ -39,7 +39,7 @@
             "byob": true,
             "triggerInsertPosition": "beforeend",
             "labelTextContainer": "span",
-            "buttonContent": "ΓÜÖ∩╕Å"
+            "buttonContent": "⚙️"
         }
     }
 }

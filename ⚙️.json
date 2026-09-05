@@ -1,9 +1,9 @@
-﻿{
+{
     "enhConfig": {
-        "enhKey": "ΓÜÖ∩╕Å",
+        "enhKey": "⚙️",
         "spawn": "be-typed/be-typed.js",
         "withAttrs": {
-            "base": "ΓÜÖ∩╕Å",
+            "base": "⚙️",
             "triggerInsertPosition": "${base}-trigger-insert-position",
             "labelTextContainer": "${base}-label-text-container",
             "buttonContent": "${base}-button-content",

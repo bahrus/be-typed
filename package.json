@@ -34,13 +34,13 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
-    "be-hive": "0.1.15",
-    "mount-observer": "0.1.41",
-    "roundabout-lib": "0.0.21"
+    "be-hive": "0.1.18",
+    "mount-observer": "0.1.53",
+    "roundabout-lib": "0.0.36"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.0",
-    "spa-ssi": "0.0.27"
+    "@playwright/test": "1.63.0",
+    "spa-ssi": "0.0.28"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
