@@ -24,10 +24,12 @@ export class Typer {
     showDialog() {
         if (this.#dialog === undefined) {
             if (globalThis[guid] === undefined) {
+                ensureStyle();
                 const dialog = document.createElement('dialog');
                 dialog.id = guid;
                 this.#dialog = dialog;
                 dialog.innerHTML = String.raw `
+    <button type="button" class="be-typed-close" aria-label="Close" title="Close">&#x2715;</button>
     <form method="dialog">
         <label style="display:block;">Name:
             <input type="text" name="name" />
@@ -91,6 +93,9 @@ export class Typer {
                 `;
                 dialog.querySelector('[value="default"]')?.addEventListener('click', e => {
                     this.applyDialog(e);
+                }, { signal: this.#dialogAC.signal });
+                dialog.querySelector('.be-typed-close')?.addEventListener('click', () => {
+                    this.#dialog.close('cancel');
                 }, { signal: this.#dialogAC.signal });
                 document.body.appendChild(dialog);
             }
@@ -180,3 +185,41 @@ export class Typer {
     }
 }
 const guid = 'Frx+fxv4fEOZg2XfHY0DRw';
+const styleId = guid + '-style';
+
+/**
+ * Inject the default look for the close button exactly once.
+ *
+ * Everything lives inside `@layer be-typed`, so any unlayered rule the page
+ * author writes for `.be-typed-close` (or the dialog) wins regardless of
+ * specificity or source order - the button is fully styleable / removable.
+ */
+function ensureStyle() {
+    if (document.getElementById(styleId) !== null) return;
+    // The dialog id contains "+" and "/", so it must be escaped before it can
+    // appear in a selector.
+    const d = 'dialog#' + CSS.escape(guid);
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = String.raw `
+@layer be-typed {
+    ${d} { position: relative; }
+    ${d} .be-typed-close {
+        position: absolute;
+        inset-block-start: 0.25rem;
+        inset-inline-end: 0.25rem;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        padding: 0;
+        font: inherit;
+        line-height: 1;
+        color: inherit;
+        background: none;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+    ${d} .be-typed-close:hover { background: rgba(0, 0, 0, 0.08); }
+}`;
+    document.head.appendChild(style);
+}
