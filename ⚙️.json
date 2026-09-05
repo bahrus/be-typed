@@ -11,5 +11,35 @@
                 "instanceOf": "Boolean"
             }
         }
+    },
+    "customData": {
+        "weakRef": {
+            "properties": [
+                "enhancedElement",
+                "trigger"
+            ]
+        },
+        "actions": {
+            "setBtnContent": {
+                "ifAllOf": [
+                    "buttonContent"
+                ],
+                "ifNoneOf": [
+                    "byob"
+                ]
+            }
+        },
+        "handlers": {
+            "trigger_to_openDialog_on": "click"
+        },
+        "compacts": {
+            "when_triggerInsertPosition_changes_call_addTypeBtn": 0
+        },
+        "defaultPropVals": {
+            "byob": true,
+            "triggerInsertPosition": "beforeend",
+            "labelTextContainer": "span",
+            "buttonContent": "⚙️"
+        }
     }
 }
