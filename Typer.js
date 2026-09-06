@@ -31,10 +31,10 @@ export class Typer {
                 dialog.innerHTML = String.raw `
     <button type="button" class="be-typed-close" aria-label="Close" title="Close">&#x2715;</button>
     <form method="dialog">
-        <label style="display:block;">Name:
+        <label>Name:
             <input type="text" name="name" />
         </label>
-        <label style="display:block;">Type:
+        <label>Type:
             <select name=type>
                 <option value="text">Text</option>
                 <option value="number">Number</option>
@@ -56,7 +56,6 @@ export class Typer {
         <label>
             Required:
             <input name=required type=checkbox>
-        </label>
         </label>
         <label>
             Multiple:
@@ -87,8 +86,10 @@ export class Typer {
             </select>
         </label>
         </details>
-        <button value="cancel">Cancel</button>
-        <button value="default">Apply</button>
+        <div class="be-typed-actions">
+            <button value="cancel">Cancel</button>
+            <button value="default">Apply</button>
+        </div>
     </form>
                 `;
                 dialog.querySelector('[value="default"]')?.addEventListener('click', e => {
@@ -188,11 +189,14 @@ const guid = 'Frx+fxv4fEOZg2XfHY0DRw';
 const styleId = guid + '-style';
 
 /**
- * Inject the default look for the close button exactly once.
+ * Inject the dialog's default look exactly once.
  *
- * Everything lives inside `@layer be-typed`, so any unlayered rule the page
- * author writes for `.be-typed-close` (or the dialog) wins regardless of
- * specificity or source order - the button is fully styleable / removable.
+ * Everything lives inside `@layer be-typed`, so any *unlayered* rule the page
+ * author writes wins over it regardless of specificity or source order - the
+ * whole dialog, its fields and its buttons stay fully styleable / removable
+ * with plain selectors and no `!important`. The muted "material" palette is
+ * driven by `--be-typed-*` custom properties on the dialog, so the common
+ * case is a one-line token override rather than re-declaring rules.
  */
 function ensureStyle() {
     if (document.getElementById(styleId) !== null) return;
@@ -203,23 +207,92 @@ function ensureStyle() {
     style.id = styleId;
     style.textContent = String.raw `
 @layer be-typed {
-    ${d} { position: relative; }
+    ${d} {
+        --be-typed-surface: light-dark(#fdfcff, #1b1b1f);
+        --be-typed-ink: light-dark(#1b1b1f, #e5e1e6);
+        --be-typed-muted: light-dark(#5c5b62, #a9a7ae);
+        --be-typed-accent: light-dark(#565992, #c3c4ef);
+        --be-typed-on-accent: light-dark(#ffffff, #1b1b1f);
+        --be-typed-line: light-dark(#c7c5d0, #48464f);
+        --be-typed-radius: 14px;
+        --be-typed-field-radius: 8px;
+        --be-typed-gap: 0.85rem;
+
+        color-scheme: light dark;
+        position: relative;
+        box-sizing: border-box;
+        inline-size: min(30rem, 92vw);
+        padding: 1.5rem;
+        border: none;
+        border-radius: var(--be-typed-radius);
+        background: var(--be-typed-surface);
+        color: var(--be-typed-ink);
+        box-shadow: 0 8px 24px -8px light-dark(rgb(0 0 0 / 0.28), rgb(0 0 0 / 0.6));
+        font: 400 0.95rem/1.4 system-ui, sans-serif;
+    }
+    ${d}::backdrop { background: rgb(0 0 0 / 0.32); }
+
+    ${d} form { display: flex; flex-direction: column; gap: var(--be-typed-gap); margin: 0; }
+    ${d} label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; color: var(--be-typed-muted); }
+    ${d} label:has(> input[type="checkbox"]) { flex-direction: row; align-items: center; gap: 0.5rem; }
+
+    ${d} :is(input, select) {
+        box-sizing: border-box;
+        inline-size: 100%;
+        margin: 0;
+        padding: 0.5rem 0.6rem;
+        font: inherit;
+        color: var(--be-typed-ink);
+        background: var(--be-typed-surface);
+        border: 1px solid var(--be-typed-line);
+        border-radius: var(--be-typed-field-radius);
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    ${d} :is(input, select):focus-visible {
+        outline: none;
+        border-color: var(--be-typed-accent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--be-typed-accent) 30%, transparent);
+    }
+    ${d} input[type="checkbox"] {
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        padding: 0;
+        accent-color: var(--be-typed-accent);
+    }
+
+    ${d} details { font-size: 0.8rem; color: var(--be-typed-muted); }
+    ${d} summary { cursor: pointer; padding-block: 0.25rem; }
+
+    ${d} .be-typed-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-block-start: 0.5rem; }
+    ${d} .be-typed-actions button {
+        font: inherit;
+        padding: 0.5rem 1.15rem;
+        border: none;
+        border-radius: 999px;
+        color: var(--be-typed-accent);
+        background: none;
+        cursor: pointer;
+    }
+    ${d} .be-typed-actions button:hover { background: color-mix(in srgb, var(--be-typed-accent) 12%, transparent); }
+    ${d} .be-typed-actions button[value="default"] { color: var(--be-typed-on-accent); background: var(--be-typed-accent); }
+    ${d} .be-typed-actions button[value="default"]:hover { background: color-mix(in srgb, var(--be-typed-accent) 88%, black); }
+
     ${d} .be-typed-close {
         position: absolute;
-        inset-block-start: 0.25rem;
-        inset-inline-end: 0.25rem;
+        inset-block-start: 0.5rem;
+        inset-inline-end: 0.5rem;
         inline-size: 1.75rem;
         block-size: 1.75rem;
         padding: 0;
         font: inherit;
         line-height: 1;
-        color: inherit;
+        color: var(--be-typed-muted);
         background: none;
         border: none;
         border-radius: 0.25rem;
         cursor: pointer;
     }
-    ${d} .be-typed-close:hover { background: rgba(0, 0, 0, 0.08); }
+    ${d} .be-typed-close:hover { background: color-mix(in srgb, var(--be-typed-ink) 10%, transparent); }
 }`;
     document.head.appendChild(style);
 }
