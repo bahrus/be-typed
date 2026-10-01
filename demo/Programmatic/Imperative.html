@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic imperative</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- No be-typed attribute, and no be-hive. -->
+    <label id="label"><b>[Specify Name]</b></label>
+    <script type=module>
+        import {defBeTyped} from '/def.js';
+        const emc = await defBeTyped(document.body);
+        const beTyped = label.enh.get(emc);
+        Object.assign(beTyped, {
+            buttonContent: '✎',
+            triggerInsertPosition: 'afterbegin',
+            labelTextContainer: 'b',
+        });
+        console.log(label.enh.beTyped);
+    </script>
+</body>
+</html>

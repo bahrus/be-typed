@@ -28,7 +28,9 @@ class BeTyped {
      * @param {PAP} initVals 
      */
     async init(self, enhancedElement, ctx, initVals){
-        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
+        // ctx.emc is only populated when spawned via an attribute (be-hive / mount-observer).
+        // Programmatic attachment (enh.get / enh.set) only passes ctx.config -- see def.js.
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc || ctx.config);
         /**
          * @type {RoundaboutOptions}
          */
@@ -41,7 +43,8 @@ class BeTyped {
                 ...initVals
             }
         };
-        (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+        await (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+        self.initialized = true;
     }
 
     /**

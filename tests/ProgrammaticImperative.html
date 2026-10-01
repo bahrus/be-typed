@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic Imperative</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- Fully imperative attachment: no attribute, no `.set` proxy -- just enh.get(emc) plus direct property assignment, made right after attachment. labelTextContainer is not referenced by any action, so this also checks it isn't overwritten by its default ('span'). -->
+    <label id="a"><span>decoy</span><b>[Specify Name]</b></label>
+    <label id="b"><span>decoy</span><b>[Specify Name]</b></label>
+    <script type=module>
+        import {defBeTyped} from '/def.js';
+        const emc = await defBeTyped(document.body);
+        for(const label of [a, b]){
+            Object.assign(label.enh.get(emc), {
+                buttonContent: '✎',
+                triggerInsertPosition: 'afterbegin',
+                labelTextContainer: 'b',
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic declarative out of sequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- No be-typed attribute, and no be-hive. -->
+    <label id="label"><span>[Specify Name]</span></label>
+    <script type=module>
+        import {defBeTyped} from '/def.js';
+        //only the first call needs to use .set
+        //it triggers the attachment of the enhancement.
+        label.enh.set.beTyped.buttonContent = '✎';
+        await defBeTyped(document.body);
+        console.log(label.enh.beTyped);
+    </script>
+</body>
+</html>

@@ -20,9 +20,16 @@
             ]
         },
         "actions": {
+            "addTypeBtn": {
+                "ifAllOf": [
+                    "triggerInsertPosition",
+                    "enhancedElement"
+                ]
+            },
             "setBtnContent": {
                 "ifAllOf": [
-                    "buttonContent"
+                    "buttonContent",
+                    "trigger"
                 ],
                 "ifNoneOf": [
                     "byob"
@@ -32,9 +39,9 @@
         "handlers": {
             "trigger_to_openDialog_on": "click"
         },
-        "compacts": {
-            "when_triggerInsertPosition_changes_call_addTypeBtn": 0
-        },
+        "propagate": [
+            "labelTextContainer"
+        ],
         "defaultPropVals": {
             "byob": true,
             "triggerInsertPosition": "beforeend",

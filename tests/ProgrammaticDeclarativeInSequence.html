@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic Declarative In Sequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- No be-typed attribute, and no be-hive. The config is registered first, then a property is set via the `.set` proxy, which attaches the enhancement. -->
+    <label id="a"><span>[Specify Name]</span></label>
+    <label id="b"><span>[Specify Name]</span></label>
+    <script type=module>
+        import {defBeTyped} from '/def.js';
+        await defBeTyped(document.body);
+        for(const label of [a, b]){
+            // Only the first write needs to go through `.set` -- it triggers attachment.
+            label.enh.set.beTyped.buttonContent = '✎';
+        }
+    </script>
+</body>
+</html>

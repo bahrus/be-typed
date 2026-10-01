@@ -26,17 +26,24 @@ export const emc = {
             properties: ['enhancedElement', 'trigger']
         },
         actions: {
+            // An action rather than a `when_triggerInsertPosition_changes_call_addTypeBtn` compact:
+            // a compact only fires on a change, so it never fired when triggerInsertPosition was
+            // assigned programmatically before roundabout finished initializing.
+            addTypeBtn: {
+                ifAllOf: ['triggerInsertPosition', 'enhancedElement']
+            },
             setBtnContent: {
-                ifAllOf: ['buttonContent'],
+                ifAllOf: ['buttonContent', 'trigger'],
                 ifNoneOf: ['byob']
             }
         },
         handlers: {
             trigger_to_openDialog_on: 'click'
         },
-        compacts: {
-            when_triggerInsertPosition_changes_call_addTypeBtn: 0
-        },
+        // labelTextContainer is only read by the dialog (Typer.js), so no action references it.
+        // It must be monitored explicitly, or a value set right after programmatic attachment
+        // is overwritten by its default.
+        propagate: ['labelTextContainer'],
         defaultPropVals: {
             byob: true,
             triggerInsertPosition: 'beforeend',

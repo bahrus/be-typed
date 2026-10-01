@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic Declarative Out Of Sequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- The property is set via the `.set` proxy *before* the config is registered. `.set` creates a placeholder and defers the real spawn until defBeTyped registers the config. -->
+    <label id="a"><span>[Specify Name]</span></label>
+    <label id="b"><span>[Specify Name]</span></label>
+    <script type=module>
+        import {defBeTyped} from '/def.js';
+        for(const label of [a, b]){
+            label.enh.set.beTyped.buttonContent = '✎';
+        }
+        await defBeTyped(document.body);
+    </script>
+</body>
+</html>

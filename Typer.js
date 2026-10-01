@@ -20,8 +20,11 @@ export class Typer {
         this.props = props;
 
     }
-    #dialogAC = new AbortController();
     showDialog() {
+        // The dialog is shared by every be-typed element on the page, so it applies to
+        // whichever Typer opened it last -- held weakly, so the page-lifetime dialog
+        // doesn't keep a removed element alive.
+        activeTyper = new WeakRef(this);
         if (this.#dialog === undefined) {
             if (globalThis[guid] === undefined) {
                 ensureStyle();
@@ -93,11 +96,11 @@ export class Typer {
     </form>
                 `;
                 dialog.querySelector('[value="default"]')?.addEventListener('click', e => {
-                    this.applyDialog(e);
-                }, { signal: this.#dialogAC.signal });
+                    activeTyper?.deref()?.applyDialog(e);
+                });
                 dialog.querySelector('.be-typed-close')?.addEventListener('click', () => {
-                    this.#dialog.close('cancel');
-                }, { signal: this.#dialogAC.signal });
+                    dialog.close('cancel');
+                });
                 document.body.appendChild(dialog);
             }
             else {
@@ -181,10 +184,11 @@ export class Typer {
         });
     }
     dispose() {
-        if (this.#dialogAC !== undefined)
-            this.#dialogAC.abort();
+        if (activeTyper?.deref() === this) activeTyper = undefined;
     }
 }
+/** @type {WeakRef<Typer> | undefined} */
+let activeTyper;
 const guid = 'Frx+fxv4fEOZg2XfHY0DRw';
 const styleId = guid + '-style';
 

@@ -14,11 +14,15 @@
   "exports": {
     ".": "./be-typed.js",
     "./be-typed.js": "./be-typed.js",
-    "./emc.js": "./emc.js",
-    "./⚙️.js": "./⚙️.js"
+    "./def.js": "./def.js",
+    "./emc.json": "./emc.json",
+    "./⚙️.js": "./⚙️.js",
+    "./⚙️.json": "./⚙️.json"
   },
   "files": [
     "*.js",
+    "emc.json",
+    "⚙️.json",
     "types.d.ts"
   ],
   "types": "types.d.ts",
@@ -34,6 +38,7 @@
     "url": "git+https://github.com/bahrus/be-typed.git"
   },
   "dependencies": {
+    "assign-gingerly": "0.0.97",
     "be-hive": "0.1.18",
     "mount-observer": "0.1.53",
     "roundabout-lib": "0.0.38"
